@@ -1,0 +1,185 @@
+package io.hdocdb.store;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class HDocumentDBScriptTest {
+
+    private static boolean useMock = HDocumentDBTest.useMock;
+    private static ScriptEngineManager manager = new ScriptEngineManager();
+    private static ScriptEngine engine = manager.getEngineByName("JavaScript");
+
+    @BeforeClass
+    public static void init() throws Exception {
+        engine.put("useMock", useMock);
+        evalScript("/util/assert.js");
+        evalScript("/util/setup.js");
+    }
+
+    @Test
+    public void testBasic() throws Exception {
+        evalScript("/jstests/basic.js");
+    }
+
+    @Test
+    public void testBasic1() throws Exception {
+        evalScript("/jstests/basic1.js");
+    }
+
+    @Test
+    public void testBasic2() throws Exception {
+        evalScript("/jstests/basic2.js");
+    }
+
+    @Test
+    public void testBasic3() throws Exception {
+        evalScript("/jstests/basic3.js");
+    }
+
+    @Test
+    public void testBasic4() throws Exception {
+        evalScript("/jstests/basic4.js");
+    }
+
+    @Test
+    public void testBasic5() throws Exception {
+        evalScript("/jstests/basic5.js");
+    }
+
+    @Test
+    public void testBasic7() throws Exception {
+        evalScript("/jstests/basic7.js");
+    }
+
+    @Test
+    public void testBasic8() throws Exception {
+        evalScript("/jstests/basic8.js");
+    }
+
+    @Test
+    public void testBasic9() throws Exception {
+        evalScript("/jstests/basic9.js");
+    }
+
+    @Test
+    public void testFind1() throws Exception {
+        evalScript("/jstests/find1.js");
+    }
+
+    @Test
+    public void testFind2() throws Exception {
+        evalScript("/jstests/find2.js");
+    }
+
+    @Test
+    public void testFind4() throws Exception {
+        evalScript("/jstests/find4.js");
+    }
+
+    @Test
+    public void testFind5() throws Exception {
+        evalScript("/jstests/find5.js");
+    }
+
+    @Test
+    public void testFind6() throws Exception {
+        evalScript("/jstests/find6.js");
+    }
+
+    @Test
+    public void testFind7() throws Exception {
+        evalScript("/jstests/find7.js");
+    }
+
+    @Test
+    public void testUpdate2() throws Exception {
+        evalScript("/jstests/update2.js");
+    }
+
+    @Test
+    public void testUpdate3() throws Exception {
+        evalScript("/jstests/update3.js");
+    }
+
+    @Test
+    public void testUpdate5() throws Exception {
+        evalScript("/jstests/update5.js");
+    }
+
+    @Test
+    public void testUpdate6() throws Exception {
+        evalScript("/jstests/update6.js");
+    }
+
+    @Test
+    public void testUpdate7() throws Exception {
+        evalScript("/jstests/update7.js");
+    }
+
+    @Test
+    public void testUpdate8() throws Exception {
+        evalScript("/jstests/update8.js");
+    }
+
+    @Test
+    public void testUpdate9() throws Exception {
+        evalScript("/jstests/update9.js");
+    }
+
+    @Test
+    public void testUpdatea() throws Exception {
+        evalScript("/jstests/updatea.js");
+    }
+
+    @Test
+    public void testUpdatec() throws Exception {
+        evalScript("/jstests/updatec.js");
+    }
+
+    @Test
+    public void testUpdated() throws Exception {
+        evalScript("/jstests/updated.js");
+    }
+
+    @Test
+    public void testUpdatee() throws Exception {
+        evalScript("/jstests/updatee.js");
+    }
+
+    @Test
+    public void testUpdateArrayMatch1() throws Exception {
+        evalScript("/jstests/update_arraymatch1.js");
+    }
+
+    @Test
+    public void testUpdateArrayMatch2() throws Exception {
+        evalScript("/jstests/update_arraymatch2.js");
+    }
+
+    @Test
+    public void testUpdateArrayMatch3() throws Exception {
+        evalScript("/jstests/update_arraymatch3.js");
+    }
+
+    @Test
+    public void testUpdateArrayMatch4() throws Exception {
+        evalScript("/jstests/update_arraymatch4.js");
+    }
+
+    private static void evalScript(String script) throws Exception {
+        String scriptFile = HDocumentDBScriptTest.class.getResource(script).getFile();
+        try {
+            FileReader reader = new FileReader(scriptFile);
+            engine.eval(reader);
+        } catch (IOException | ScriptException e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
+}
