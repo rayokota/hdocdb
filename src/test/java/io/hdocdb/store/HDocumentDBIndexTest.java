@@ -724,4 +724,64 @@ public class HDocumentDBIndexTest extends HDocumentDBTest {
         closeDocumentCollection(coll);
     }
 
+
+    @Test
+    public void testIndexDrop2() throws Exception {
+        HDocumentCollection coll;
+        coll = getTempDocumentCollection();
+
+        coll.createIndex("testindex", "z.a", Value.Type.INT, Order.ASCENDING, false);
+        coll.createIndex("testindex2", "z.a", Value.Type.INT, Order.ASCENDING, false);
+        coll.newIndexBuilder("testindex3")
+                .add("z.a", Value.Type.INT, Order.ASCENDING)
+                .add("a", Value.Type.INT, Order.ASCENDING)
+                .setAsync(false)
+                .build();
+
+        Document newDoc = new HDocument();
+        newDoc.set("name", "foo");
+        newDoc.set("z", ImmutableMap.of("a", 17, "b", 4));
+        newDoc.set("a", 3);
+        newDoc.setId("d1");
+        coll.insert(newDoc);
+
+        int cnt = 0;
+        try (DocumentStream documentStream = coll.find(new HQueryCondition()
+                .and()
+                .is("z.a", QueryCondition.Op.EQUAL, 17)
+                .is("a", QueryCondition.Op.EQUAL, 3)
+                .close()
+                .build())) {
+            assertEquals(((HDocumentStream)documentStream).explain().getIndexName(), "testindex3");
+            for (Document doc : documentStream) {
+                cnt++;
+                assertEquals(17, doc.getMap("z").get("a"));
+                //System.out.println("\t" + doc);
+            }
+        }
+        assertEquals(1, cnt);
+
+        assertEquals(1, coll.getIndexSize("testindex"));
+        assertEquals(1, coll.getIndexSize("testindex2"));
+        assertEquals(1, coll.getIndexSize("testindex3"));
+
+        coll.dropIndex("testindex3", false);
+
+        cnt = 0;
+        try (DocumentStream documentStream = coll.find(new HQueryCondition().is("z.a", QueryCondition.Op.EQUAL, 17))) {
+            assertEquals(((HDocumentStream)documentStream).explain().getIndexName(), "testindex");
+            for (Document doc : documentStream) {
+                cnt++;
+                assertEquals(17, doc.getMap("z").get("a"));
+                //System.out.println("\t" + doc);
+            }
+        }
+        assertEquals(1, cnt);
+
+        assertEquals(1, coll.getIndexSize("testindex"));
+        assertEquals(1, coll.getIndexSize("testindex2"));
+        assertEquals(0, coll.getIndexSize("testindex3"));
+
+        closeDocumentCollection(coll);
+    }
 }
