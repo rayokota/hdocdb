@@ -1195,6 +1195,21 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
     }
 
     @Test
+    public void setOrReplaceNullTest() throws Exception {
+        Document r = new HDocument();
+        r.set("f1", "abc");
+        mainColl.insertOrReplace(new HValue("nullkey1"), r);
+        mainColl.flush();
+        DocumentMutation m = new HDocumentMutation();
+        m.set("f2", 1000).setOrReplaceNull("f3");
+        mainColl.update(new HValue("nullkey1"), m);
+        mainColl.flush();
+        Document d = mainColl.findById(new HValue("nullkey1"));
+        Assert.assertEquals(1000L, (long) d.getInt("f2"));
+        Assert.assertEquals(Type.NULL, d.getValue("f3").getType());
+    }
+
+    @Test
     public void testNestedCFProj() throws Exception {
         HDocumentCollection coll = getTempDocumentCollection();
         HashMap<String, String> cfPath = new HashMap<>();

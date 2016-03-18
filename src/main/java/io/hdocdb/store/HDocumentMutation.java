@@ -779,6 +779,11 @@ public class HDocumentMutation implements DocumentMutation {
      * @return {@code this} for chained invocation
      */
     public HDocumentMutation setOrReplaceNull(FieldPath path) {
+        MutationOp op = new MutationOp();
+        op.setType(MutationOp.Type.SET_OR_REPLACE);
+        op.setFieldPath(path);
+        op.setOpValue(null);
+        mutationOps.add(op);
 
         return this;
     }
