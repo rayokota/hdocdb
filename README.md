@@ -150,7 +150,7 @@ To create a secondary index on the `lastName` field:
 		
 If the index is created after documents have already been added to the database, then the index will be populated in the background asynchronously.  Since the indexing is performed on the client, this may take some time for a large collection.
 
-Now, when performing a query such as the following, the first index above will be used.
+Now, when performing a query such as the following, the index above will be used.
 
 		QueryCondition condition = new HQueryCondition()
 			.and()
