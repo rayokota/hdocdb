@@ -221,7 +221,7 @@ To run a script:
 	
 ## Implementation Notes
 
-Each document is stored as a separate row in HBase.  This allows multiple operations on a document to be performed together atomically.  The document is essentially "shredded" using a technique called key-flattening, as described in the [Argo](http://pages.cs.wisc.edu/~chasseur/pubs/argo-long.pdf) paper.  That technique was developed for use with a relational database, but in HDocDB it has been adapted for HBase.
+Each document is stored as a separate row in HBase.  This allows multiple operations on a document to be performed together atomically.  The document is essentially "shredded" using a technique called key-flattening, as described in the [Argo](http://pages.cs.wisc.edu/~chasseur/pubs/argo-long.pdf) paper.  That technique was developed for use with a relational database, but in HDocDB it has been [adapted](https://rayokota.wordpress.com/2016/03/17/hbase-as-a-multi-model-data-store/) for HBase.
 
 The implementation of global secondary indexes is based on blogs by [Hofhansl](http://hadoop-hbase.blogspot.de/2012/10/musings-on-secondary-indexes.html) and [Yates](http://jyates.github.io/2012/07/09/consistent-enough-secondary-indexes.html).
 
