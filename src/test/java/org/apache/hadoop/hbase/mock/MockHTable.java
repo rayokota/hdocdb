@@ -589,7 +589,7 @@ public class MockHTable implements HTableInterface {
     }
 
     private boolean check(byte[] row, byte[] family, byte[] qualifier, CompareFilter.CompareOp compareOp, byte[] value) {
-        if (value == null || value.length == 0)
+        if (value == null)
             return !data.containsKey(row) ||
                     !data.get(row).containsKey(family) ||
                     !data.get(row).get(family).containsKey(qualifier);
