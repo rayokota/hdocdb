@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * MockHTable.
@@ -59,7 +60,7 @@ public class MockHTable implements HTableInterface {
     private final List<Class<? extends Service>> coprocessorClasses = new ArrayList<>();
 
     private NavigableMap<byte[], NavigableMap<byte[], NavigableMap<byte[], NavigableMap<Long, byte[]>>>> data
-            = new TreeMap<>(Bytes.BYTES_COMPARATOR);
+            = new ConcurrentSkipListMap<>(Bytes.BYTES_COMPARATOR);
 
     private static List<KeyValue> toKeyValue(byte[] row, NavigableMap<byte[], NavigableMap<byte[], NavigableMap<Long, byte[]>>> rowdata, int maxVersions) {
         return toKeyValue(row, rowdata, 0, Long.MAX_VALUE, maxVersions);
@@ -545,10 +546,9 @@ public class MockHTable implements HTableInterface {
     }
 
     private <K, V> V forceFind(NavigableMap<K, V> map, K key, V newObject) {
-        V data = map.get(key);
+        V data = map.putIfAbsent(key, newObject);
         if (data == null) {
             data = newObject;
-            map.put(key, data);
         }
         return data;
     }
@@ -559,19 +559,19 @@ public class MockHTable implements HTableInterface {
     @Override
     public void put(Put put) throws IOException {
         byte[] row = put.getRow();
-        NavigableMap<byte[], NavigableMap<byte[], NavigableMap<Long, byte[]>>> rowData = forceFind(data, row, new TreeMap<byte[], NavigableMap<byte[], NavigableMap<Long, byte[]>>>(Bytes.BYTES_COMPARATOR));
+        NavigableMap<byte[], NavigableMap<byte[], NavigableMap<Long, byte[]>>> rowData = forceFind(data, row, new ConcurrentSkipListMap<byte[], NavigableMap<byte[], NavigableMap<Long, byte[]>>>(Bytes.BYTES_COMPARATOR));
         for (byte[] family : put.getFamilyMap().keySet()) {
             if (!columnFamilies.contains(new String(family))) {
                 throw new RuntimeException("Not Exists columnFamily : " + new String(family));
             }
-            NavigableMap<byte[], NavigableMap<Long, byte[]>> familyData = forceFind(rowData, family, new TreeMap<byte[], NavigableMap<Long, byte[]>>(Bytes.BYTES_COMPARATOR));
+            NavigableMap<byte[], NavigableMap<Long, byte[]>> familyData = forceFind(rowData, family, new ConcurrentSkipListMap<byte[], NavigableMap<Long, byte[]>>(Bytes.BYTES_COMPARATOR));
             for (KeyValue kv : put.getFamilyMap().get(family)) {
                 kv.updateLatestStamp(Bytes.toBytes(System.currentTimeMillis()));
                 try {
                     Thread.sleep(1);  // sleep for 1 millis so timestamps don't conflict
                 } catch (InterruptedException e) { }
                 byte[] qualifier = kv.getQualifier();
-                NavigableMap<Long, byte[]> qualifierData = forceFind(familyData, qualifier, new TreeMap<Long, byte[]>());
+                NavigableMap<Long, byte[]> qualifierData = forceFind(familyData, qualifier, new ConcurrentSkipListMap<Long, byte[]>());
                 qualifierData.put(kv.getTimestamp(), kv.getValue());
             }
         }

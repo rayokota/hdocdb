@@ -8,6 +8,7 @@ import org.apache.hadoop.hbase.mock.MockHTable;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MockHDocumentDB extends HDocumentDB {
 
@@ -22,21 +23,17 @@ public class MockHDocumentDB extends HDocumentDB {
         super(null, ticker);
     }
 
-    private Map<TableName, Table> getTables() {
-        if (tables == null) tables = Maps.newHashMap();
+    private synchronized Map<TableName, Table> getTables() {
+        if (tables == null) tables = new ConcurrentHashMap<>();
         return tables;
     }
 
     protected void createTable(TableName name) throws IOException {
-        if (!tableExists(name)) {
-            getTables().put(name, new MockHTable(name, DEFAULT_FAMILY));
-        }
+        getTables().putIfAbsent(name, new MockHTable(name, DEFAULT_FAMILY));
     }
 
     protected void createTable(TableName name, int maxVersions, boolean keepDeleted) throws IOException {
-        if (!tableExists(name)) {
-            getTables().put(name, new MockHTable(name, DEFAULT_FAMILY));
-        }
+        getTables().putIfAbsent(name, new MockHTable(name, DEFAULT_FAMILY));
     }
 
     protected boolean tableExists(TableName name) throws IOException {
