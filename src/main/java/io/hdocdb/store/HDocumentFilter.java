@@ -1,5 +1,7 @@
 package io.hdocdb.store;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import io.hdocdb.HDocument;
 import io.hdocdb.util.Codec;
 import org.apache.hadoop.hbase.Cell;
@@ -10,6 +12,7 @@ import org.apache.hadoop.hbase.filter.FilterBase;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.ojai.store.QueryCondition;
 
+import javax.annotation.Nullable;
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -54,14 +57,14 @@ public class HDocumentFilter extends FilterBase implements Externalizable {
         HDocument doc = new HDocument(kvs);
         if (condition.evaluate(doc)) {
             if (!fieldPaths.isEmpty()) {
-                for (Iterator<Cell> iter = kvs.iterator(); iter.hasNext(); ) {
-                    Cell cell = iter.next();
-                    String columnName = Bytes.toString(CellUtil.cloneQualifier(cell));
-                    if (columnName.equals(HDocument.TS)) continue;
-                    if (!matchesPaths(fieldPaths, columnName)) {
-                        iter.remove();
+                Iterables.removeIf(kvs, new Predicate<Cell>() {
+                    @Override
+                    public boolean apply(@Nullable Cell cell) {
+                        String columnName = Bytes.toString(CellUtil.cloneQualifier(cell));
+                        if (columnName.equals(HDocument.TS)) return false;
+                        return !matchesPaths(fieldPaths, columnName);
                     }
-                }
+                });
             }
         } else {
             kvs.clear();
