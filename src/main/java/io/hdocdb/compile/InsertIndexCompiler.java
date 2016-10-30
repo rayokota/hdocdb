@@ -106,8 +106,8 @@ public class InsertIndexCompiler {
         indexKey.setPosition(0);
         byte[] bytes = new byte[indexKey.getRemaining()];
         indexKey.get(bytes);
-        Put put = new Put(bytes);
         long now = System.currentTimeMillis();
+        Put put = new Put(bytes, now);  // set timestamp so can be used in deletions
         HValue ts = new HValue(new OTimestamp(now));
         ts.fillPut(put, Index.DEFAULT_FAMILY, HDocument.TS_PATH);
         return put;

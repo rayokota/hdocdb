@@ -30,7 +30,7 @@ public class DeleteIndexCompiler {
                         IndexQueries indexQueries = plan.execute();
                         for (IndexQuery indexQuery : indexQueries) {
                             byte[] indexRowKey = Bytes.toBytes(indexQuery.getIndexRowKey());
-                            Delete delete = new Delete(indexRowKey);
+                            Delete delete = new Delete(indexRowKey, indexQuery.getIndexTs());
                             indexTable.delete(delete);
                         }
                         return true;

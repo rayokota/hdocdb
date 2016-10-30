@@ -192,7 +192,7 @@ public class HDocumentStream extends AbstractList<Document> implements DocumentS
             @Override
             public void run() {
                 try {
-                    Delete delete = new Delete(Bytes.toBytes(indexQuery.getIndexRowKey()));
+                    Delete delete = new Delete(Bytes.toBytes(indexQuery.getIndexRowKey()), indexQuery.getIndexTs());
                     indexQueries.getIndexTable().delete(delete);
                 } catch (IOException e) {
                     LOG.error("Could not delete stale index", e);
