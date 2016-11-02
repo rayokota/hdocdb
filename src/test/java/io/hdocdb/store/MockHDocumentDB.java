@@ -1,10 +1,9 @@
 package io.hdocdb.store;
 
 import com.google.common.base.Ticker;
-import com.google.common.collect.Maps;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Table;
-import org.apache.hadoop.hbase.mock.MockHTable;
+import org.apache.hadoop.hbase.client.mock.MockHTable;
 
 import java.io.IOException;
 import java.util.Map;

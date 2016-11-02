@@ -10,7 +10,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-package org.apache.hadoop.hbase.mock;
+package org.apache.hadoop.hbase.client.mock;
 
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.Message;
