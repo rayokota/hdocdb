@@ -3,7 +3,7 @@
 
     <groupId>io.hdocdb</groupId>
     <artifactId>hdocdb</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
 
@@ -22,7 +22,7 @@
         <connection>scm:git:git://github.com:rayokota/hdocdb.git</connection>
         <developerConnection>scm:git:git@github.com:rayokota/hdocdb.git</developerConnection>
         <url>git@github.com:rayokota/hdocdb.git</url>
-      <tag>hdocdb-0.0.1</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <properties>
