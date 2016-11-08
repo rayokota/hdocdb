@@ -155,7 +155,7 @@ public class QueryIndexPlan {
                 }
             }
             return indexQueries;
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | IOException e) {
             throw new StoreException(e);
         }
     }

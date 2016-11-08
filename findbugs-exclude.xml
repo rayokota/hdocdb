@@ -27,6 +27,10 @@
         <Class name="io.hdocdb.HValue"/>
         <Bug pattern="EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS,EI_EXPOSE_REP"/>
     </Match>
+    <Match>
+        <Class name="io.hdocdb.util.InclusiveStopPrefixFilter"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
 
     <!-- don't worry about dead local stores or unread fields -->
     <Match>

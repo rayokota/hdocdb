@@ -1815,6 +1815,7 @@ public class HDocumentMutation implements DocumentMutation {
                 switch (type) {
                     case SET:
                         fillSet(mutations, family, document, mutationOp);
+                        break;
                     case SET_OR_REPLACE:
                         fillSetOrReplace(mutations, family, mutationOp);
                         break;
