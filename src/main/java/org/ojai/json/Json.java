@@ -121,7 +121,7 @@ public final class Json {
 
   /**
    * Returns a new instance of s JSON DocumentStream from the specified InputStream
-   * using the FieldPath => Type mapping to decode the JSON tokens from the stream.
+   * using the FieldPath to Type mapping to decode the JSON tokens from the stream.
    */
   public static DocumentStream newDocumentStream(
       InputStream in, Map<FieldPath, Type> fieldPathTypeMap) {

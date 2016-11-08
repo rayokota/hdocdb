@@ -149,7 +149,8 @@ public class Values {
   }
 
   /**
-   * Converts a {@code Value} to its extended JSON representation.<br/><br/>
+   * Converts a {@code Value} to its extended JSON representation.
+   *
    * The 7 intrinsic types, &nbsp;{@code null, boolean, string, long,
    * double, array, and map }, are represented in regular JSON. The
    * extended types are converted to a singleton map with the type tag name

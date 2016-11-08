@@ -56,7 +56,6 @@ public interface DocumentReader {
    *
    * @return The {@code EventType} for the current node or {@code null} if the
    *         reader is past the end of the document
-   * @throws DecodingException if the document is malformed or incomplete.
    */
   DocumentReader.EventType next();
 
@@ -158,8 +157,6 @@ public interface DocumentReader {
    * @return The unscaled value of current {@code DECIMAL} node
    * @throws TypeException if the current {@code EventType} is not
    *         {@code DECIMAL}
-   * @throws RangeException if the precision of the decimal number is greater
-   *         than 9
    */
   int getDecimalValueAsInt();
 
@@ -170,8 +167,6 @@ public interface DocumentReader {
    * @return The unscaled value of current {@code DECIMAL} node
    * @throws TypeException if the current {@code EventType} is not
    *         {@code DECIMAL}
-   * @throws RangeException if the precision of the decimal number is greater
-   *         than 18
    */
   long getDecimalValueAsLong();
 

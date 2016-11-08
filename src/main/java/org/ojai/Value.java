@@ -296,16 +296,16 @@ public interface Value {
   ByteBuffer getBinary();
 
   /**
-   * Returns the value as a <code>Map<String, Object></code>. The returned
+   * Returns the value as a <code>Map&lt;String, Object&gt;</code>. The returned
    * Map could be mutable or immutable however, modifying the returned Map
    * does not alter the content of the Value.
    *
-   * @throws TypeException if this value is not of <code>MAP<code> type.
+   * @throws TypeException if this value is not of <code>MAP</code> type.
    */
   Map<String, Object> getMap();
 
   /**
-   * Returns the value as a <code>List&lt;Object></code>. The returned List
+   * Returns the value as a <code>List&lt;Object&gt;</code>. The returned List
    * could be mutable or immutable however, modifying the returned List does
    * not alter the content of the Value.
    *
@@ -314,27 +314,7 @@ public interface Value {
   List<Object> getList();
 
   /**
-   * Returns the value as an <code>Object} of the underlying type.
-   * <pre>
-   * Type.NULL      => null
-   * Type.BOOLEAN   => Boolean
-   * Type.STRING    => String
-   * Type.BYTE      => Byte
-   * Type.SHORT     => Short
-   * Type.INT       => Integer
-   * Type.LONG      => Long
-   * Type.FLOAT     => Float
-   * Type.DOUBLE    => Double
-   * Type.DECIMAL   => BigDecimal
-   * Type.DATE      => org.ojai.types.ODate
-   * Type.TIME      => org.ojai.types.OTime
-   * Type.TIMESTAMP => org.ojai.types.OTimestamp
-   * Type.INTERVAL  => org.ojai.types.OInterval
-   * Type.BINARY    => java.nio.ByteBuffer
-   * Type.MAP       => Map<String, Object>
-   * Type.ARRAY     => List<Object>
-   * </pre>
-   * <br/>Modifying the returned object does not alter the content of the Value.
+   * Returns the value as an <code>Object</code> of the underlying type.
    */
   Object getObject();
 

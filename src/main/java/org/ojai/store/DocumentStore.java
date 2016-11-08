@@ -91,10 +91,10 @@ public interface DocumentStore extends AutoCloseable {
 
   /**
    * Inserts or replace a new document in this DocumentStore.
-   * <br/><br/>
+   *
    * The specified Document must contain an {@code "_id"} field or the operation
    * will fail.
-   * <br/><br/>
+   *
    * If the document with the given _id exists in the DocumentStore then that
    * document will be replaced by the specified document.
    *
@@ -105,10 +105,10 @@ public interface DocumentStore extends AutoCloseable {
 
   /**
    * Inserts or replace a new document in this DocumentStore with the given _id.
-   * <br/><br/>
+   *
    * The specified document should either not contain an {@code "_id"} field or
    * its value should be same as the specified _id or the operation will fail.
-   * <br/><br/>
+   *
    * If the document with the given _id exists in the DocumentStore then that
    * document will be replaced by the specified document.
    *
@@ -121,7 +121,7 @@ public interface DocumentStore extends AutoCloseable {
   /**
    * Inserts or replace a new document in this DocumentStore with the value of
    * the specified Field as the {@code _id}.
-   * <br/><br/>
+   *
    * If the document with the given _id exists in the DocumentStore then that
    * document will be replaced by the specified document.
    *
@@ -136,7 +136,7 @@ public interface DocumentStore extends AutoCloseable {
   /**
    * Inserts or replace a new document in this DocumentStore with the value of
    * the specified Field as the {@code _id}.
-   * <br/><br/>
+   *
    * If the document with the given _id exists in the DocumentStore then that
    * document will be replaced by the specified document.
    *
@@ -150,7 +150,7 @@ public interface DocumentStore extends AutoCloseable {
 
   /**
    * Inserts all documents from the specified DocumentStream into this DocumentStore.
-   * <br/><br/>
+   *
    * This is a synchronous API and it won't return until all the documents
    * in the DocumentStream are written to the DocumentStore or some error has
    * occurred while storing the documents. Each document read from the DocumentStream
@@ -173,7 +173,7 @@ public interface DocumentStore extends AutoCloseable {
    * Inserts all documents from the specified DocumentStream into this DocumentStore
    * using the field specified by parameter {@code fieldAsKey} as the "_id" field.
    * If an "_id" field is present in the documents, an exception will be thrown.
-   * <br/><br/>
+   *
    * This is a synchronous API and it won't return until all the documents
    * in the DocumentStream are written to the DocumentStore or some error has
    * occurred while storing the documents. Each document read from the DocumentStream
@@ -199,7 +199,7 @@ public interface DocumentStore extends AutoCloseable {
    * Inserts all documents from the specified DocumentStream into this DocumentStore
    * using the field specified by parameter {@code fieldAsKey} as the "_id" field.
    * If an "_id" field is present in the documents, an exception will be thrown.
-   * <br/><br/>
+   *
    * This is a synchronous API and it won't return until all the documents
    * in the DocumentStream are written to the DocumentStore or some error has
    * occurred while storing the documents. Each document read from the DocumentStream
@@ -222,7 +222,8 @@ public interface DocumentStore extends AutoCloseable {
       throws MultiOpException;
 
   /**
-   * Applies a mutation on the document identified by the document id.<br/><br/>
+   * Applies a mutation on the document identified by the document id.
+   *
    * All updates specified by the mutation object should be applied atomically,
    * and consistently meaning either all of the updates in mutation are applied
    * or none of them is applied and a partial update should not be visible to an
@@ -242,9 +243,6 @@ public interface DocumentStore extends AutoCloseable {
    * the "_id" to delete the document.
    *
    * @param _id document id
-   * @param doc JSON document to be deleted
-   * @param fieldAsKey document's field to be used as the key when an id is not
-   *                   passed in and a document doesn't have an "_id" field
    * @throws StoreException
    */
   public void delete(Value _id) throws StoreException;
@@ -268,8 +266,6 @@ public interface DocumentStore extends AutoCloseable {
    * The untouched documents will remain in the DocumentStream.
    *
    * @param stream DocumentStream
-   * @param fieldAsKey a field from each document whose value is to be used as
-   *                     the document key for deletion
    *
    * @throws MultiOpException which has a list of write-failed documents and
    *                          their errors
@@ -296,12 +292,6 @@ public interface DocumentStore extends AutoCloseable {
    *
    * @param doc JSON document as the new value for the given document
    * @param _id to be used as the key for the document
-   * @param fieldAsKey document's field to be used as the key when the id is not
-   *                     passed in and document doesn't have an "_id" field
-   * @throws TableNotFoundException when a DocumentStore does not exist to add this document
-   * @throws ReadOnlyException when a DocumentStore is not accepting writes
-   * @throws OpNotPermittedException when the server returned EPERM
-   * @throws DocumentExistsException when a document with id already exists in DocumentStore
    */
   public void insert(Value _id, Document doc) throws StoreException;
 
@@ -328,8 +318,6 @@ public interface DocumentStore extends AutoCloseable {
    * The untouched documents will remain in the DocumentStream.
    *
    * @param stream DocumentStream
-   * @param fieldAsKey a field from each document whose value is to be used as
-   *                     the document key for deletion
    *
    * @throws MultiOpException which has a list of write-failed documents and
    *                          their errors
@@ -362,12 +350,6 @@ public interface DocumentStore extends AutoCloseable {
 
    * @param doc JSON document as the new value for the given document
    * @param _id to be used as the key for the document
-   * @param fieldAsKey document's field to be used as the key when an id is not
-   *                     passed in and document doesn't have an "_id" field
-   * @throws TableNotFoundException when a DocumentStore does not exist to which to add this document
-   * @throws ReadOnlyException when a DocumentStore is not accepting writes
-   * @throws OpNotPermittedException when the server returns EPERM
-   * @throws DocumentNotFoundException when a document with the id does not exist in DocumentStore
    */
   public void replace(Value _id, Document doc) throws StoreException;
 
@@ -395,8 +377,6 @@ public interface DocumentStore extends AutoCloseable {
    * The untouched documents will remain in the DocumentStream.
    *
    * @param stream A DocumentStream to read the documents from
-   * @param fieldAsKey field from each document whose value is to be used as
-   *                     the document key for deletion
    *
    * @throws MultiOpException which has list of write-failed documents and
    *                          their errors

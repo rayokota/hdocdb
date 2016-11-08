@@ -203,7 +203,7 @@ public class HDocumentCollection implements DocumentStore {
      * Returns a DocumentStream with all the documents in the DocumentStore that
      * satisfies the QueryCondition. Each Document will contain only the paths
      * that are specified in the argument.
-     * <p/>
+     *
      * If no field path is specified then it returns full document for a given document.
      *
      * @param c     The QueryCondition to match the documents
@@ -280,10 +280,10 @@ public class HDocumentCollection implements DocumentStore {
 
     /**
      * Inserts or replace a new document in this DocumentStore.
-     * <br/><br/>
+     *
      * The specified Document must contain an {@code "_id"} field or the operation
      * will fail.
-     * <br/><br/>
+     *
      * If the document with the given _id exists in the DocumentStore then that
      * document will be replaced by the specified document.
      *
@@ -299,10 +299,10 @@ public class HDocumentCollection implements DocumentStore {
 
     /**
      * Inserts or replace a new document in this DocumentStore with the given _id.
-     * <br/><br/>
+     *
      * The specified document should either not contain an {@code "_id"} field or
      * its value should be same as the specified _id or the operation will fail.
-     * <br/><br/>
+     *
      * If the document with the given _id exists in the DocumentStore then that
      * document will be replaced by the specified document.
      *
@@ -324,7 +324,7 @@ public class HDocumentCollection implements DocumentStore {
     /**
      * Inserts or replace a new document in this DocumentStore with the value of
      * the specified Field as the {@code _id}.
-     * <br/><br/>
+     *
      * If the document with the given _id exists in the DocumentStore then that
      * document will be replaced by the specified document.
      *
@@ -341,7 +341,7 @@ public class HDocumentCollection implements DocumentStore {
     /**
      * Inserts or replace a new document in this DocumentStore with the value of
      * the specified Field as the {@code _id}.
-     * <br/><br/>
+     *
      * If the document with the given _id exists in the DocumentStore then that
      * document will be replaced by the specified document.
      *
@@ -377,26 +377,24 @@ public class HDocumentCollection implements DocumentStore {
 
     /**
      * Inserts all documents from the specified DocumentStream into this DocumentStore.
-     * <br/><br/>
+     *
      * This is a synchronous API and it won't return until all the documents
      * in the DocumentStream are written to the DocumentStore or some error has
      * occurred while storing the documents. Each document read from the DocumentStream
      * must have a field "_id"; otherwise, the operation will fail.
-     * <p/>
+     *
      * If there is an error in reading from the stream or in writing to the DocumentStore
      * then a MultiOpException will be thrown containing the list of documents that
      * failed to be stored in the DocumentStore. Reading from a stream stops on the
      * first read error. If only write errors occur, the iterator will stop and the
      * rest of the documents will remain un-consumed in the DocumentStream.
-     * <p/>
+     *
      * If the parameter {@code fieldAsKey} is provided, will be stored as the "_id"
      * of the stored document. If an "_id" field is present in the documents, an
      * error will be thrown. When reading the document back from the store, the
      * key will be returned back as usual as the "_id" field.
      *
      * @param stream     The DocumentStream to read the documents from.
-     * @param fieldAsKey field from each document whose value is to be used as
-     *                   the document key for insertion
      * @throws MultiOpException which has a list of write-failed documents and
      *                          their errors.
      */
@@ -415,7 +413,8 @@ public class HDocumentCollection implements DocumentStore {
     }
 
     /**
-     * Applies a mutation on the document identified by the document id.<br/><br/>
+     * Applies a mutation on the document identified by the document id.
+     *
      * All updates specified by the mutation object should be applied atomically,
      * and consistently meaning either all of the updates in mutation are applied
      * or none of them is applied and a partial update should not be visible to an
@@ -455,14 +454,11 @@ public class HDocumentCollection implements DocumentStore {
     /**
      * Deletes a document with the given id. This operation is successful even
      * when the document with the given id doesn't exist.
-     * <p/>
+     *
      * If the parameter {@code fieldAsKey} is provided, its value will be used as
      * the "_id" to delete the document.
      *
      * @param _id        document id
-     * @param doc        JSON document to be deleted
-     * @param fieldAsKey document's field to be used as the key when an id is not
-     *                   passed in and a document doesn't have an "_id" field
      * @throws StoreException
      */
     public void delete(Value _id) throws StoreException {
@@ -500,7 +496,7 @@ public class HDocumentCollection implements DocumentStore {
      * in the DocumentStream are written to the DocumentStore or some error occurs while
      * writing the documents. Each document read from the DocumentStream must have a
      * field "_id" of type BINARY or UTF8-string; otherwise the operation will fail.
-     * <p/>
+     *
      * If there is an error in reading from the stream or in writing to
      * the DocumentStore then a MultiOpException will be thrown that contains a list of
      * documents that failed to write to the DocumentStore. Reading from a stream stops on
@@ -509,8 +505,6 @@ public class HDocumentCollection implements DocumentStore {
      * The untouched documents will remain in the DocumentStream.
      *
      * @param stream     DocumentStream
-     * @param fieldAsKey a field from each document whose value is to be used as
-     *                   the document key for deletion
      * @throws MultiOpException which has a list of write-failed documents and
      *                          their errors
      */
@@ -531,24 +525,19 @@ public class HDocumentCollection implements DocumentStore {
     /**
      * Inserts a document with the given id. This operation is successful only
      * when the document with the given id doesn't exist.
-     * <p/>
+     *
      * "fieldAsKey", when provided, will also be stored as the "_id" field in the
      * written document for the document. If "_id" already existed in the document, then
      * an error will be thrown. When reading the document back from the DB, the
      * key will be returned back as usual as the "_id" field.
-     * <p/>
+     *
      * If the passed in id is not a direct byte buffer, there will be a copy to one.
-     * <p/>
+     *
      * Note that an insertOrReplace() operation would be more efficient than an
      * insert() call.
      *
      * @param doc        JSON document as the new value for the given document
      * @param _id        to be used as the key for the document
-     * @param fieldAsKey document's field to be used as the key when the id is not
-     *                   passed in and document doesn't have an "_id" field
-     * @throws TableNotFoundException  when a DocumentStore does not exist to add this document
-     * @throws ReadOnlyException       when a DocumentStore is not accepting writes
-     * @throws OpNotPermittedException when the server returned EPERM
      * @throws DocumentExistsException when a document with id already exists in DocumentStore
      */
     public void insert(Value _id, Document doc) throws StoreException {
@@ -597,10 +586,10 @@ public class HDocumentCollection implements DocumentStore {
      * writing the documents. Each document read from the DocumentStream must have a
      * field "_id" of type BINARY or UTF8-string; otherwise, the operation will
      * fail or it will be of the Document type.
-     * <p/>
+     *
      * If a document with the given key exists on the server then it throws a document
      * exists exception, similar to the non-DocumentStream based insert() API.
-     * <p/>
+     *
      * If there is an error in reading from the stream or in writing to
      * the DocumentStore then a MultiOpException will be thrown that contains a list of
      * documents that failed to write to the DocumentStore. Reading from a stream stops on
@@ -609,8 +598,6 @@ public class HDocumentCollection implements DocumentStore {
      * The untouched documents will remain in the DocumentStream.
      *
      * @param stream     DocumentStream
-     * @param fieldAsKey a field from each document whose value is to be used as
-     *                   the document key for deletion
      * @throws MultiOpException which has a list of write-failed documents and
      *                          their errors
      */
@@ -634,27 +621,22 @@ public class HDocumentCollection implements DocumentStore {
      * passed document. If the document id is explicitly passed then the document should
      * not contain "_id" field or its value should be the same as the explicitly
      * specified id; otherwise, the operation will  fail.
-     * <p/>
+     *
      * If the document with the given key does not exist on the server then it will
      * throw DocumentNotFoundException.
-     * <p/>
+     *
      * "fieldAsKey", when provided, will also be stored as the "_id" field in the
      * written document for the document. If "_id" already existed in the document, then
      * an error will be thrown. When reading the document back from the DB, the
      * key would be returned back as usual as "_id" field.
-     * <p/>
+     *
      * If the passed in id is not a direct byte buffer, there will be a copy to one.
-     * <p/>
+     *
      * Note that an insertOrReplace() operation would be more efficient than an
      * replace() call.
      *
      * @param doc        JSON document as the new value for the given document
      * @param _id        to be used as the key for the document
-     * @param fieldAsKey document's field to be used as the key when an id is not
-     *                   passed in and document doesn't have an "_id" field
-     * @throws TableNotFoundException    when a DocumentStore does not exist to which to add this document
-     * @throws ReadOnlyException         when a DocumentStore is not accepting writes
-     * @throws OpNotPermittedException   when the server returns EPERM
      * @throws DocumentNotFoundException when a document with the id does not exist in DocumentStore
      */
     public void replace(Value _id, Document doc) throws StoreException {
@@ -702,11 +684,11 @@ public class HDocumentCollection implements DocumentStore {
      * writing the documents. Each document read from the DocumentStream must have a
      * field "_id" of type BINARY or UTF8-string; otherwise, the operation will
      * fail or it will be of Document type.
-     * <p/>
+     *
      * If the document with the given key does not exist on the server then it throws,
      * a document not exists exception, similar to the non-DocumentStream based
      * replace() API.
-     * <p/>
+     *
      * If there is an error in reading from the stream or in writing to
      * the DocumentStore then a MultiOpException will be thrown that contains a list of
      * documents that failed to write to the DocumentStore. Reading from a stream stops on
@@ -715,8 +697,6 @@ public class HDocumentCollection implements DocumentStore {
      * The untouched documents will remain in the DocumentStream.
      *
      * @param stream     A DocumentStream to read the documents from
-     * @param fieldAsKey field from each document whose value is to be used as
-     *                   the document key for deletion
      * @throws MultiOpException which has list of write-failed documents and
      *                          their errors
      */
@@ -744,25 +724,25 @@ public class HDocumentCollection implements DocumentStore {
      * types, such as byte, short, int, long, float, double, or decimal,
      * of a field. The operation will fail if the increment is applied to a
      * field that is of a non-numeric type.
-     * <p/>
+     *
      * If an id doesn't exist, it gets created (similar to the insertOrReplace
      * behavior). And it is created, with the value of 'inc' parameter. The same
      * logic applies to intermittent paths in the path: they get created top to
      * bottom.
-     * <p/>
+     *
      * If the type is different than the field in the operation, it fails.
-     * <p/>
+     *
      * The increment operation won't change the type of existing value stored in
      * the given field for the document. The resultant value of the field will be
      * truncated based on the original type of the field.
-     * <p/>
+     *
      * For example, if a field 'score' is of type int and contains 60 and an
      * increment of double '5.675' is applied, then the resultant value of the
      * field will be 65 (65.675 will be truncated to 65).
-     * <p/>
+     *
      * If the type to which the increment is applied is a byte, short, or int,
      * then it needs to use long as the operation.
-     * <p/>
+     *
      * If the passed in id is not a direct byte buffer, there will be a copy to one.
      *
      * @param _id   document id
@@ -864,10 +844,10 @@ public class HDocumentCollection implements DocumentStore {
     /**
      * Atomically evaluates the condition on a given document and if the
      * condition holds true for the document then a mutation is applied on the document.
-     * <p/>
+     *
      * If an id doesn't exist, the function returns false (no exception is thrown).
      * If the mutation operation fails, it throws exception.
-     * <p/>
+     *
      * If the passed in id is not a direct byte buffer, there will be a copy to one.
      *
      * @param _id       document id
@@ -896,10 +876,10 @@ public class HDocumentCollection implements DocumentStore {
     /**
      * Atomically evaluates the condition on given document and if the
      * condition holds true for the document then it is atomically deleted.
-     * <p/>
+     *
      * If id doesnt exist, returns false (no exception is thrown).
      * If deletion operation fails, it throws exception.
-     * <p/>
+     *
      * If the passed in id is not a direct byte buffer, there will be a copy to one.
      *
      * @param _id       document id
@@ -928,10 +908,10 @@ public class HDocumentCollection implements DocumentStore {
      * Atomically evaluates the condition on the document with the given id and if the
      * condition holds true for the document then it atomically replaces the document
      * with the given document.
-     * <p/>
+     *
      * If the id doesn't exist, the function returns false (no exception is thrown).
      * If the replace operation fails, it throws an exception.
-     * <p/>
+     *
      * If the passed in id is not a direct byte buffer, there will be a copy to one.
      *
      * @param _id       document id

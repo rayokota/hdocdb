@@ -185,7 +185,7 @@ public final class FieldPath implements Comparable<FieldPath>, Iterable<FieldSeg
   /**
    * @return A sub-segment of this FieldPath starting after the specified
    *         ancestor. For example if the current FieldPath is "a.b.c.d"
-   *         and the specified ancestor is "a.b", will return "c.d".<br/>
+   *         and the specified ancestor is "a.b", will return "c.d".
    *         If the ancestor is same as this, will return EMPTY. If the
    *         ancestor is not an actual ancestor, will return null.
    */

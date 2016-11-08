@@ -23,7 +23,7 @@ import java.util.Iterator;
 /**
  * A stream of documents.
  *
- * Implements Iterable<Document> but only one call is allows to iterator()
+ * Implements Iterable&lt;Document&gt; but only one call is allows to iterator()
  * or readerIterator(). Only one of these iterators can be retrieved
  * from the stream.
  */
@@ -36,22 +36,16 @@ public interface DocumentStream extends AutoCloseable, Iterable<Document> {
    *
    * @param listener a {@code DocumentListener} which is notified of
    *        {@code Document}s as they arrive
-   * @throws StreamInUseException if an iterator is already retrieved from this
-   *         {@code DocumentStream}.
    */
   public void streamTo(DocumentListener listener);
 
   /**
    * Returns an iterator over a set of {@code Document}.
-   * @throws StreamInUseException if an iterator is already retrieved from this
-   *         {@code DocumentStream}.
    */
   Iterator<Document> iterator();
 
   /**
    * Returns an {@code Iterable} over a set of {@code DocumentReader}.
-   * @throws StreamInUseException if an iterator is already retrieved from this
-   *         {@code DocumentStream}.
    */
   Iterable<DocumentReader> documentReaders();
 

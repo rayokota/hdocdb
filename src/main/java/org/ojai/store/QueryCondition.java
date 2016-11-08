@@ -35,7 +35,7 @@ public interface QueryCondition {
   public enum Op {
     /**
      * The Value at the specified path is less than the reference value.
-     * </br></br>
+     *
      * Reference value type: All scalars {@link Type} i.e {@code
      * [NULL, BOOLEAN, STRING, BYTE, SHORT, INT, LONG, FLOAT, DOUBLE,
      * DECIMAL, DATE, TIME, TIMESTAMP, INTERVAL, BINARY]}.
@@ -44,7 +44,8 @@ public interface QueryCondition {
 
     /**
      * The Value at the specified path is less than or equal to the
-     * reference value.</br></br>
+     * reference value.
+     *
      * Reference value type: All scalars {@link Type} i.e {@code
      * [NULL, BOOLEAN, STRING, BYTE, SHORT, INT, LONG, FLOAT, DOUBLE,
      * DECIMAL, DATE, TIME, TIMESTAMP, INTERVAL, BINARY]}.
@@ -53,21 +54,22 @@ public interface QueryCondition {
 
     /**
      * The Value at the specified path is equal to the reference value.
-     * </br></br>
+     *
      * Reference value type: All {@link org.ojai.Value.Type}.
      */
     EQUAL,
 
     /**
      * The Value at the specified path is not equal to the reference value.
-     * </br></br>
+     *
      * Reference value type: All {@link org.ojai.Value.Type}.
      */
     NOT_EQUAL,
 
     /**
      * The Value at the specified path is greater than or equal to the
-     * reference value.</br></br>
+     * reference value.
+     *
      * Reference value type: All scalars {@link Type} i.e {@code
      * [NULL, BOOLEAN, STRING, BYTE, SHORT, INT, LONG, FLOAT, DOUBLE,
      * DECIMAL, DATE, TIME, TIMESTAMP, INTERVAL, BINARY]}.
@@ -76,7 +78,7 @@ public interface QueryCondition {
 
     /**
      * The Value at the specified path is greater than the reference value.
-     * </br></br>
+     *
      * Reference value type: All scalars {@link Type} i.e {@code
      * [NULL, BOOLEAN, STRING, BYTE, SHORT, INT, LONG, FLOAT, DOUBLE,
      * DECIMAL, DATE, TIME, TIMESTAMP, INTERVAL, BINARY]}.

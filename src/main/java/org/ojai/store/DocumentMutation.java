@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * The DocumentMutation interface defines the APIs to perform mutation of a
  * Document already stored in a DocumentStore.
- * <br/><br/>
+ *
  * Please see the following notes regarding the behavior of the API types in
  * this Interface.
  *
@@ -45,23 +45,25 @@ import java.util.Map;
  *
  * <h3>{@code setOrReplace()}</h3>
  * These are performant APIs that do not require or perform a read-modify-write
- * operation on the server.<br/><br/>
+ * operation on the server.
+ *
  * If a segment in the specified FieldPath doesn't exist, it is created. For example:
  * <blockquote>{@code setOrReplace("a.b.c", (int) 10)}</blockquote>
  * In this example, if the Document stored in the DocumentStore has an empty MAP
  * field {@code "a"}, then a setOrReplace of {@code "a.b.c"} will create a field
  * {@code "b"} of type MAP under {@code "a"}. It will also create an field named
- * {@code "c"} of type INTEGER under {@code "b"} and set its value to 10.<br/><br/>
+ * {@code "c"} of type INTEGER under {@code "b"} and set its value to 10.
  *
  * If any segment specified in the FieldPath is of a different type than the
  * existing field segment on the server, it will be deleted and replaced by
  * a new segment. For example:
- * <blockquote>{@code setOrReplace("a.b.c", (int) 10)}<br/></blockquote>
+ * <blockquote>{@code setOrReplace("a.b.c", (int) 10)}</blockquote>
  * If the Document stored in the DocumentStore has a field "a" of type array.
  * This operation will delete "a", create new field "a" of type map, add a MAP
  * field "b" under "a" and finally create an INTEGER field "c" with value 10 under
- * "b".<br/><br/>
- * <b/>Warning:</b> These are potentially destructive operations since they do
+ * "b".
+ *
+ * <b>Warning:</b> These are potentially destructive operations since they do
  * not validate existence or type of any field segment in the specified FieldPath.
  *
  * <h3>{@code append()}</h3>
@@ -87,12 +89,12 @@ import java.util.Map;
  * corresponding Document in the DocumentStore then this operation will create
  * a new field at the given path. This new field will be of same type as the
  * value specified in the parameter.
- * <br/><br/>
+ *
  * This operation will fail if the type of any intermediate fields specified
  * in the FieldPath doesn't match the type of the corresponding field in the
  * record stored on the server. For example, an operation on field "a.b.c" will fail
  * if, on the server, record a itself is an array or integer.
- * <br/><br/>
+ *
  * An increment operation can be applied on any of the numeric types such as byte,
  * short, int, long, float, double, or decimal. The operation will fail if the
  * increment is applied to a field that is of a non-numeric type.
@@ -829,7 +831,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Appends elements of the given list to an existing ARRAY at the given FieldPath.
-   * <br/><br/>
+   *
    * If the field doesn't exist on server, it will be created and will be set to
    * the specified List. If the field already exists, but is not of ARRAY type,
    * then this operation will fail.
@@ -842,7 +844,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Appends elements of the given list to an existing ARRAY at the given FieldPath.
-   * <br/><br/>
+   *
    * If the field doesn't exist on server, it will be created and will be set to
    * the specified List. If the field already exists, but is not of ARRAY type,
    * then this operation will fail.
@@ -855,7 +857,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Appends the given string to an existing STRING at the given FieldPath.
-   * <br/><br/>
+   *
    * If the field doesn't exist on server, it will be created and will be set to
    * the specified String. If the field already exists, but is not of STRING type,
    * then this operation will fail.
@@ -868,7 +870,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Appends the given string to an existing STRING at the given FieldPath.
-   * <br/><br/>
+   *
    * If the field doesn't exist on server, it will be created and will be set to
    * the specified String. If the field already exists, but is not of STRING type,
    * then this operation will fail.
@@ -881,7 +883,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Appends the given byte array to an existing BINARY value at the given FieldPath.
-   * <br/><br/>
+   *
    * If the field doesn't exist on server, it will be created and will be set to
    * the BINARY value specified by the given byte array. If the field already exists,
    * but is not of BINARY type, then this operation will fail.
@@ -896,7 +898,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Appends the given byte array to an existing BINARY value at the given FieldPath.
-   * <br/><br/>
+   *
    * If the field doesn't exist on server, it will be created and will be set to
    * the BINARY value specified by the given byte array. If the field already exists,
    * but is not of BINARY type, then this operation will fail.
@@ -911,7 +913,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Appends the given byte array to an existing BINARY value at the given FieldPath.
-   * <br/><br/>
+   *
    * If the field doesn't exist on server, it will be created and will be set to
    * the BINARY value specified by the given byte array. If the field already exists,
    * but is not of BINARY type, then this operation will fail.
@@ -924,7 +926,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Appends the given byte array to an existing BINARY value at the given FieldPath.
-   * <br/><br/>
+   *
    * If the field doesn't exist on server, it will be created and will be set to
    * the BINARY value specified by the given byte array. If the field already exists,
    * but is not of BINARY type, then this operation will fail.
@@ -937,7 +939,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Appends the given ByteBuffer to an existing BINARY value at the given FieldPath.
-   * <br/><br/>
+   *
    * If the field doesn't exist on server, it will be created and will be set to
    * the BINARY value specified by the given ByteBuffer. If the field already exists,
    * but is not of BINARY type, then this operation will fail.
@@ -950,7 +952,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Appends the given ByteBuffer to an existing BINARY value at the given FieldPath.
-   * <br/><br/>
+   *
    * If the field doesn't exist on server, it will be created and will be set to
    * the BINARY value specified by the given ByteBuffer. If the field already exists,
    * but is not of BINARY type, then this operation will fail.
@@ -963,7 +965,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Merges the existing MAP at the given FieldPath with the specified Document.
-   * <br/><br/>
+   *
    * @param path the FieldPath to apply this merge operation
    * @param doc the document to be merged
    * @return {@code this} for chained invocation
@@ -972,7 +974,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Merges the existing MAP at the given FieldPath with the specified Document.
-   * <br/><br/>
+   *
    * @param path the FieldPath to apply this merge operation
    * @param doc the document to be merged
    * @return {@code this} for chained invocation
@@ -981,7 +983,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Merges the existing MAP at the given FieldPath with the specified Map.
-   * <br/><br/>
+   *
    * @param path the FieldPath to apply this merge operation
    * @param map the Map to be merged
    * @return {@code this} for chained invocation
@@ -990,7 +992,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Merges the existing MAP at the given FieldPath with the specified Map.
-   * <br/><br/>
+   *
    * @param path the FieldPath to apply this merge operation
    * @param map the Map to be merged
    * @return {@code this} for chained invocation
@@ -1105,7 +1107,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Deletes the field at the given path.
-   * <br/><br/>
+   *
    * If the field does not exist, the mutation operation will silently succeed.
    * For example, if a delete operation is attempted on {@code "a.b.c"}, and the
    * field {@code "a.b"} is an array, then {@code "a.b.c"} will not be deleted.
@@ -1116,7 +1118,7 @@ public interface DocumentMutation extends Iterable<MutationOp> {
 
   /**
    * Deletes the field at the given path.
-   * <br/><br/>
+   *
    * If the field does not exist, the mutation operation will silently succeed.
    * For example, if a delete operation is attempted on {@code "a.b.c"}, and the
    * field {@code "a.b"} is an array, then {@code "a.b.c"} will not be deleted.

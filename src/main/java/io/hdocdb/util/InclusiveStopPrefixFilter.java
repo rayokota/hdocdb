@@ -12,7 +12,7 @@ import java.io.ObjectOutput;
 
 /**
  * A Filter that stops after a row that is greater than the given prefix.
- * <p/>
+ *
  * Use this filter to include the stop row, eg: [A,Z].
  */
 public class InclusiveStopPrefixFilter extends FilterBase implements Externalizable {
