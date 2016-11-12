@@ -2,9 +2,19 @@
 
 HDocDB is a client layer for using HBase as a store for JSON documents.  It implements many of the interfaces in the [OJAI](http://ojai.github.io) framework.
 
+## Installing
+
+Releases of HDocDB are deployed to Maven Central.
+
+		<dependency>
+		    <groupId>io.hdocdb</groupId>
+		    <artifactId>hdocdb</artifactId>
+		    <version>0.0.2</version>
+		</dependency>
+
 ## Building
 
-Prerequisites for building HDocDB:
+You can also choose to build HDocDB manually.  Prerequisites for building:
 
 * git
 * Maven
