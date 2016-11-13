@@ -980,7 +980,6 @@ public class HDocumentCollection implements DocumentStore {
     }
 
     public void populateIndex(String name, boolean async) {
-        // it is safe to perform this check as long as the index ha
         Index index = getIndex(name);
         if (index == null) return;
 
