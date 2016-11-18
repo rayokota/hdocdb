@@ -26,9 +26,9 @@ cd hdocdb
 mvn clean package -DskipTests
 ```
 
-## Installation
+## Deployment
 
-Currently HDocDB does not make use of coprocessors.  However, HDocDB does make use of  server-side filters.  To install HDocDB:
+Currently HDocDB does not make use of coprocessors.  However, HDocDB does make use of server-side filters.  To deploy HDocDB:
 
 * Add target/hdocdb-0.0.3.jar to the classpath of all HBase region servers.
 * Restart the HBase region servers.
