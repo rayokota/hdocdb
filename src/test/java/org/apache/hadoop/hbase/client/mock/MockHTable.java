@@ -144,10 +144,16 @@ public class MockHTable implements HTableInterface {
     public void mutateRow(RowMutations rm) throws IOException {
         // currently only support Put and Delete
         for (Mutation mutation : rm.getMutations()) {
+            long now = System.currentTimeMillis();
             if (mutation instanceof Put) {
                 put((Put) mutation);
             } else if (mutation instanceof Delete) {
                 delete((Delete) mutation);
+            }
+            // wait to ensure the next Put or Delete gets a different ts
+            long prev = now;
+            while (now == prev) {
+                now = System.currentTimeMillis();
             }
         }
     }
@@ -549,7 +555,6 @@ public class MockHTable implements HTableInterface {
      */
     @Override
     public void put(Put put) throws IOException {
-        long now = System.currentTimeMillis();
         byte[] row = put.getRow();
         NavigableMap<byte[], NavigableMap<byte[], NavigableMap<Long, byte[]>>> rowData = forceFind(data, row, new ConcurrentSkipListMap<>(Bytes.BYTES_COMPARATOR));
         for (byte[] family : put.getFamilyMap().keySet()) {
@@ -559,18 +564,12 @@ public class MockHTable implements HTableInterface {
             NavigableMap<byte[], NavigableMap<Long, byte[]>> familyData = forceFind(rowData, family, new ConcurrentSkipListMap<>(Bytes.BYTES_COMPARATOR));
             for (KeyValue kv : put.getFamilyMap().get(family)) {
                 long ts = put.getTimeStamp();
-                if (ts == HConstants.LATEST_TIMESTAMP) ts = now;
+                if (ts == HConstants.LATEST_TIMESTAMP) ts = System.currentTimeMillis();
                 kv.updateLatestStamp(Bytes.toBytes(ts));
                 byte[] qualifier = kv.getQualifier();
                 NavigableMap<Long, byte[]> qualifierData = forceFind(familyData, qualifier, new ConcurrentSkipListMap<>());
                 qualifierData.put(kv.getTimestamp(), kv.getValue());
             }
-        }
-        // wait to ensure the next Put gets a different ts
-        long prev = now;
-        now = System.currentTimeMillis();
-        while (now == prev) {
-            now = System.currentTimeMillis();
         }
     }
 
