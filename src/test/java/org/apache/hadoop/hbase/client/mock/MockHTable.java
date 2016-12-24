@@ -153,10 +153,12 @@ public class MockHTable implements HTableInterface {
             long ts = mutation.getTimeStamp();
             if (ts != HConstants.LATEST_TIMESTAMP && ts > maxTs) maxTs = ts;
         }
-        // we have intentionally set the ts in the future, so wait
         long now = System.currentTimeMillis();
-        while (now <= maxTs) {
-            now = System.currentTimeMillis();
+        if (now <= maxTs) {
+            // we have intentionally set the ts in the future, so wait
+            try {
+                Thread.sleep(maxTs - now + 1);
+            } catch (InterruptedException ignored) { }
         }
     }
 
