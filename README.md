@@ -195,7 +195,7 @@ QueryCondition condition = new HQueryCondition()
     .is("dateOfBirth", QueryCondition.Op.LESS, ODate.parse("1981-01-01"))
     .close()
     .build();
-DocumentStream docs = coll.find(condition)
+DocumentStream docs = coll.find(condition);
 ```
 
 A query will use at most one index.  We can verify which index was used as follows.
