@@ -6,11 +6,13 @@ HDocDB is a client layer for using HBase as a store for JSON documents.  It impl
 
 Releases of HDocDB are deployed to Maven Central.
 
-		<dependency>
-		    <groupId>io.hdocdb</groupId>
-		    <artifactId>hdocdb</artifactId>
-		    <version>0.0.3</version>
-		</dependency>
+```xml
+<dependency>
+    <groupId>io.hdocdb</groupId>
+    <artifactId>hdocdb</artifactId>
+    <version>0.0.3</version>
+</dependency>
+```
 
 ## Building
 
@@ -38,17 +40,21 @@ Currently HDocDB does not make use of coprocessors.  However, HDocDB does make u
 
 To initialize HDocDB, an HBase connection is required.  For example,
 
-		...
-		Configuration config = HBaseConfiguration.create();
-        Connection conn = ConnectionFactory.createConnection(config);
-		HDocumentDB hdocdb = new HDocumentDB(conn);
-		...
+```java
+...
+Configuration config = HBaseConfiguration.create();
+Connection conn = ConnectionFactory.createConnection(config);
+HDocumentDB hdocdb = new HDocumentDB(conn);
+...
+```
 
 Next is to obtain a document collection. 
 
-		...
-		HDocumentCollection coll = hdocdb.getCollection("mycollection");
-		...
+```java
+...
+HDocumentCollection coll = hdocdb.getCollection("mycollection");
+...
+```
 		
 Each document collection is backed by an HBase table.
 
@@ -56,45 +62,57 @@ Each document collection is backed by an HBase table.
 
 Once a document collection is in hand, creating documents is straightforward.
 
-		Document doc = new HDocument()
-			.setId("jdoe")
-			.set("firstName", "John")
-			.set("lastName", "Doe")
-			.set("dateOfBirth", ODate.parse("1970-10-10"));
-		coll.insert(doc);
+```java
+Document doc = new HDocument()
+    .setId("jdoe")
+    .set("firstName", "John")
+    .set("lastName", "Doe")
+    .set("dateOfBirth", ODate.parse("1970-10-10"));
+coll.insert(doc);
+```
 
 You can also use the `insertOrReplace()` method, which will replace the document with the same ID if it already exists.
 
-		coll.insertOrReplace(doc);
-		
+```java
+coll.insertOrReplace(doc);
+```
+
 ## Retrieving Documents
 
 To retrieve all documents in a collection, use the `find()` method.
 
-		DocumentStream docs = coll.find();
+```java
+DocumentStream docs = coll.find();
+```
 		
 To retrieve a single document by ID, use the `findById()` method.
 
-		Document doc = coll.findById("jdoe");
+```java
+Document doc = coll.findById("jdoe");
+```
 		
 You can also pass a condition to the `find()` method.
 
-		QueryCondition condition = new HQueryCondition()
-			.and()
-			.is("lastName", QueryCondition.Op.EQUAL, "Doe")
-			.is("dateOfBirth", QueryCondition.Op.LESS, ODate.parse("1981-01-01"))
-			.close()
-			.build();
-		DocumentStream docs = coll.find(condition);
+```java
+QueryCondition condition = new HQueryCondition()
+    .and()
+    .is("lastName", QueryCondition.Op.EQUAL, "Doe")
+    .is("dateOfBirth", QueryCondition.Op.LESS, ODate.parse("1981-01-01"))
+    .close()
+    .build();
+DocumentStream docs = coll.find(condition);
+```
 
 ## Updating Documents
 
 To update a document, first create a document mutation.
 
-		DocumentMutation mutation = new HDocumentMutation()
-			.setOrReplace("firstName", "Jim")
-			.setOrReplace("dateOfBirth", ODate.parse("1970-10-09"));
-		coll.update("jdoe", mutation);
+```java
+ DocumentMutation mutation = new HDocumentMutation()
+    .setOrReplace("firstName", "Jim")
+    .setOrReplace("dateOfBirth", ODate.parse("1970-10-09"));
+ coll.update("jdoe", mutation);
+```
 		
 Here are the different types of methods supported with `HDocumentMutation`.
 
@@ -111,42 +129,48 @@ All of the methods other than the `setOrReplace()` method perform a read-modify-
 
 To delete a document:
 
-		coll.delete("jdoe");
+```java
+coll.delete("jdoe");
+```
 		
 ## Saving and Retrieving Objects
 
 Since OJAI has [Jackson](http://wiki.fasterxml.com/JacksonHome) integration, HDocDB can treat HBase as an object store.  Assuming your Java class is annotated as follows:
 
-	public class User {
+```java
+public class User {
 
-    	private String id;
-    	private String firstName;
-    	private String lastName;
+    private String id;
+    private String firstName;
+    private String lastName;
 
-    	@JsonCreator
-    	public User(@JsonProperty("_id")       String id,
-                    @JsonProperty("firstName") String firstName,
-                    @JsonProperty("lastName")  String lastName) {
-        	this.id = id;
-        	this.firstName = firstName;
-        	this.lastName = lastName;
-    	}
+    @JsonCreator
+    public User(@JsonProperty("_id")       String id,
+                @JsonProperty("firstName") String firstName,
+                @JsonProperty("lastName")  String lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
-    	@JsonProperty("_id")
-    	public String getId() { return id; }
+    @JsonProperty("_id")
+    public String getId() { return id; }
 
-    	public String getFirstName() { return firstName; }
+    public String getFirstName() { return firstName; }
 
-   		public String getLastName() { return lastName; }
-	}
+    public String getLastName() { return lastName; }
+}
+```
 
 Then instances of your class can be saved and retrieved using HDocDB.
 		
-		User user = new User("jsmith", "John", "Smith");
-		Document doc = Json.newDocument(user);
-		coll.insert(doc);
-		...
-		user = coll.findById("jsmith").toJavaBean(User.class);
+```java
+User user = new User("jsmith", "John", "Smith");
+Document doc = Json.newDocument(user);
+coll.insert(doc);
+...
+user = coll.findById("jsmith").toJavaBean(User.class);
+```
 		
 ## Global Secondary Indexes
 
@@ -156,47 +180,61 @@ Index management is performed mostly on the client-side, so it is not as perform
 
 To create a secondary index on the `lastName` field:
 
-		coll.createIndex("myindex" "lastName", Value.Type.STRING);
+```java
+coll.createIndex("myindex" "lastName", Value.Type.STRING);
+```
 		
 If the index is created after documents have already been added to the database, then the index will be populated in the background asynchronously.  Since the indexing is performed on the client, this may take some time for a large collection.
 
 Now, when performing a query such as the following, the index above will be used.
 
-		QueryCondition condition = new HQueryCondition()
-			.and()
-			.is("lastName", QueryCondition.Op.EQUAL, "Doe")
-			.is("dateOfBirth", QueryCondition.Op.LESS, ODate.parse("1981-01-01"))
-			.close()
-			.build();
-		DocumentStream docs = coll.find(condition)
+```java
+QueryCondition condition = new HQueryCondition()
+    .and()
+    .is("lastName", QueryCondition.Op.EQUAL, "Doe")
+    .is("dateOfBirth", QueryCondition.Op.LESS, ODate.parse("1981-01-01"))
+    .close()
+    .build();
+DocumentStream docs = coll.find(condition)
+```
 
 A query will use at most one index.  We can verify which index was used as follows.
 
-		System.out.println(((HDocumentStream)docs).explain().asDocument());
+```java
+System.out.println(((HDocumentStream)docs).explain().asDocument());
+```
 
 which should print the following.
 
-	{
-		"plan": "index scan",
-		"indexName": "myindex",
-		"indexBounds": {"lastName": "[Doe‥Doe]"},
-		"staleIndexesRunningCount": 0
-	}
-	
+```json
+{
+    "plan": "index scan",
+    "indexName": "myindex",
+    "indexBounds": {"lastName": "[Doe‥Doe]"},
+    "staleIndexesRunningCount": 0
+}
+```
+
 We can also specify which index to use.
 
-		DocumentStream docs = coll.findWithIndex("myindex", condition)
+```java
+DocumentStream docs = coll.findWithIndex("myindex", condition);
+```
 		
 Or that no index should be used.
 
-		DocumentStream docs = coll.findWithIndex(Index.NONE, condition)
+```java
+DocumentStream docs = coll.findWithIndex(Index.NONE, condition);
+```
 		
 You can also create compound indexes.
 
-		IndexBuilder builder = coll.newIndexBuilder("myindex2")
-			.add("lastName", Value.Type.STRING)
-			.add("firstName", Value.Type.STRING)
-			.build();
+```java
+IndexBuilder builder = coll.newIndexBuilder("myindex2")
+    .add("lastName", Value.Type.STRING)
+    .add("firstName", Value.Type.STRING)
+    .build();
+```
 
 
 ## HDocDB Shell with Nashorn Integration
@@ -205,29 +243,35 @@ The HDocDB shell is a command-line shell with [Nashorn](http://openjdk.java.net/
 
 To start the HDocDB shell you need to use `jrunscript` that comes with Java (typically found in $JAVA_HOME/bin).
 
-	$ jrunscript -cp <hbase-conf-dir>:target/hdocdb-0.0.3.jar -f target/classes/shell/hdocdb.js -f - 
+```
+$ jrunscript -cp <hbase-conf-dir>:target/hdocdb-0.0.3.jar -f target/classes/shell/hdocdb.js -f - 
+```
 
 Here is a sample run.
 
-	nashorn> db.mycoll.insert( { _id: "jdoe", first_name: "John", last_name: "Doe" } )
+```
+nashorn> db.mycoll.insert( { _id: "jdoe", first_name: "John", last_name: "Doe" } )
 	
-	nashorn> var doc = db.mycoll.find( { last_name: "Doe" } )[0]
+nashorn> var doc = db.mycoll.find( { last_name: "Doe" } )[0]
 	
-	nashorn> print(doc)
-	{"_id":"jdoe","first_name":"John","last_name":"Doe"}
+nashorn> print(doc)
+{"_id":"jdoe","first_name":"John","last_name":"Doe"}
 	
-	nashorn> db.mycoll.update( { last_name: "Doe" }, { $set: { first_name: "Jim" } } )
+nashorn> db.mycoll.update( { last_name: "Doe" }, { $set: { first_name: "Jim" } } )
 	
-	nashorn> var doc = db.mycoll.find( { last_name: "Doe" } )[0]
+nashorn> var doc = db.mycoll.find( { last_name: "Doe" } )[0]
 	
-	nashorn> print(doc)
-	{"_id":"jdoe","first_name":"Jim","last_name":"Doe"}
+nashorn> print(doc)
+{"_id":"jdoe","first_name":"Jim","last_name":"Doe"}
 	
-	nashorn> db.mycoll.delete( "jdoe" )
+nashorn> db.mycoll.delete( "jdoe" )
+```
 
 To run a script:
 
-	$ jrunscript -cp <hbase-conf-dir>:target/hdocdb-0.0.3.jar -f target/classes/shell/hdocdb.js -f <script>
+```
+$ jrunscript -cp <hbase-conf-dir>:target/hdocdb-0.0.3.jar -f target/classes/shell/hdocdb.js -f <script>
+```
 	
 ## Implementation Notes
 
