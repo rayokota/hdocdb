@@ -108,10 +108,10 @@ DocumentStream docs = coll.find(condition);
 To update a document, first create a document mutation.
 
 ```java
- DocumentMutation mutation = new HDocumentMutation()
+DocumentMutation mutation = new HDocumentMutation()
     .setOrReplace("firstName", "Jim")
     .setOrReplace("dateOfBirth", ODate.parse("1970-10-09"));
- coll.update("jdoe", mutation);
+coll.update("jdoe", mutation);
 ```
 		
 Here are the different types of methods supported with `HDocumentMutation`.
