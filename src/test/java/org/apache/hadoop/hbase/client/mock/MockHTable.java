@@ -1,4 +1,4 @@
-/**
+/*
  * This file is licensed to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the
  * License. You may obtain a copy of the License at
@@ -17,18 +17,52 @@ import com.google.protobuf.Message;
 import com.google.protobuf.Service;
 import com.google.protobuf.ServiceException;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.*;
-import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
+import org.apache.hadoop.hbase.HColumnDescriptor;
+import org.apache.hadoop.hbase.HConstants;
+import org.apache.hadoop.hbase.HRegionLocation;
+import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.ServerName;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.Append;
+import org.apache.hadoop.hbase.client.Delete;
+import org.apache.hadoop.hbase.client.Durability;
+import org.apache.hadoop.hbase.client.Get;
+import org.apache.hadoop.hbase.client.HTable;
+import org.apache.hadoop.hbase.client.Increment;
+import org.apache.hadoop.hbase.client.Mutation;
+import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.RegionLocator;
+import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.ResultScanner;
+import org.apache.hadoop.hbase.client.Row;
+import org.apache.hadoop.hbase.client.RowMutations;
+import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.client.TableDescriptor;
 import org.apache.hadoop.hbase.client.coprocessor.Batch;
+import org.apache.hadoop.hbase.client.metrics.ScanMetrics;
 import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.ipc.CoprocessorRpcChannel;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.hbase.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.NavigableSet;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -85,6 +119,10 @@ public class MockHTable implements Table {
         data.clear();
     }
 
+    public byte[] getTableName() {
+        return getName().getName();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -110,13 +148,14 @@ public class MockHTable implements Table {
      * {@inheritDoc}
      */
     @Override
-    public HTableDescriptor getTableDescriptor() throws IOException {
+    public TableDescriptor getDescriptor() throws IOException {
         HTableDescriptor table = new HTableDescriptor(tableName);
         for (String columnFamily : columnFamilies) {
             table.addFamily(new HColumnDescriptor(columnFamily));
         }
         return table;
     }
+
 
     /**
      * {@inheritDoc}
@@ -131,7 +170,7 @@ public class MockHTable implements Table {
             } else if (mutation instanceof Delete) {
                 delete((Delete) mutation);
             }
-            long ts = mutation.getTimeStamp();
+            long ts = mutation.getTimestamp();
             if (ts != HConstants.LATEST_TIMESTAMP && ts > maxTs) maxTs = ts;
         }
         long now = System.currentTimeMillis();
@@ -181,11 +220,6 @@ public class MockHTable implements Table {
         return result != null && !result.isEmpty();
     }
 
-    @Override
-    public boolean[] existsAll(List<Get> var1) throws IOException {
-        throw new RuntimeException(this.getClass() + " does NOT implement this method.");
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -198,7 +232,6 @@ public class MockHTable implements Table {
     /**
      * {@inheritDoc}
      */
-    @Override
     public Object[] batch(List<? extends Row> actions) throws IOException, InterruptedException {
         Object[] results = new Object[actions.size()]; // same size.
         for (int i = 0; i < actions.size(); i++) {
@@ -232,19 +265,8 @@ public class MockHTable implements Table {
      */
     @Override
     public <R> void batchCallback(
-            final List<? extends Row> actions, final Object[] results, final Batch.Callback<R> callback)
+        final List<? extends Row> actions, final Object[] results, final Batch.Callback<R> callback)
             throws IOException, InterruptedException {
-        throw new RuntimeException(this.getClass() + " does NOT implement this method.");
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <R> Object[] batchCallback(
-            List<? extends Row> actions, Batch.Callback<R> callback) throws IOException,
-            InterruptedException {
         throw new RuntimeException(this.getClass() + " does NOT implement this method.");
     }
 
@@ -307,7 +329,7 @@ public class MockHTable implements Table {
         for (Get g : gets) {
             results.add(get(g));
         }
-        return results.toArray(new Result[results.size()]);
+        return results.toArray(new Result[0]);
     }
 
     /**
@@ -421,7 +443,7 @@ public class MockHTable implements Table {
                         break;
                     }
                 }
-                return resultSets.toArray(new Result[resultSets.size()]);
+                return resultSets.toArray(new Result[0]);
             }
 
             public Result next() throws IOException {
@@ -433,6 +455,14 @@ public class MockHTable implements Table {
             }
 
             public void close() {
+            }
+
+            public ScanMetrics getScanMetrics() {
+                return null;
+            }
+
+            public boolean renewLease() {
+                return false;
             }
         };
     }
@@ -458,11 +488,11 @@ public class MockHTable implements Table {
         boolean filteredOnRowKey = false;
         List<Cell> nkvs = new ArrayList<>(tmp.size());
         for (Cell kv : tmp) {
-            if (filter.filterRowKey(kv.getRowArray(), kv.getRowOffset(), kv.getRowLength())) {
+            if (filter.filterRowKey(kv)) {
                 filteredOnRowKey = true;
                 break;
             }
-            Filter.ReturnCode filterResult = filter.filterKeyValue(kv);
+            Filter.ReturnCode filterResult = filter.filterCell(kv);
             if (filterResult == Filter.ReturnCode.INCLUDE || filterResult == Filter.ReturnCode.INCLUDE_AND_NEXT_COL) {
                 nkvs.add(filter.transformCell(kv));
             } else if (filterResult == Filter.ReturnCode.NEXT_ROW) {
@@ -527,7 +557,7 @@ public class MockHTable implements Table {
             }
             NavigableMap<byte[], NavigableMap<Long, byte[]>> familyData = forceFind(rowData, family, new ConcurrentSkipListMap<>(Bytes.BYTES_COMPARATOR));
             for (Cell kv : put.getFamilyCellMap().get(family)) {
-                long ts = put.getTimeStamp();
+                long ts = put.getTimestamp();
                 if (ts == HConstants.LATEST_TIMESTAMP) ts = System.currentTimeMillis();
                 CellUtil.updateLatestStamp(kv, ts);
                 byte[] qualifier = CellUtil.cloneQualifier(kv);
@@ -618,7 +648,7 @@ public class MockHTable implements Table {
             }
             for (Cell kv : delete.getFamilyCellMap().get(family)) {
                 long ts = kv.getTimestamp();
-                if (kv.getTypeByte() == KeyValue.Type.DeleteColumn.getCode()) {
+                if (kv.getType() == Cell.Type.DeleteColumn) {
                     if (ts == HConstants.LATEST_TIMESTAMP) {
                         data.get(row).get(CellUtil.cloneFamily(kv)).remove(CellUtil.cloneQualifier(kv));
                     } else {
@@ -694,7 +724,6 @@ public class MockHTable implements Table {
             byte[] family = ef.getKey();
             NavigableMap<byte[], Long> qToVal = ef.getValue();
             for (Map.Entry<byte[], Long> eq : qToVal.entrySet()) {
-                //noinspection UnusedAssignment
                 long newValue = incrementColumnValue(increment.getRow(), family, eq.getKey(), eq.getValue());
                 Map.Entry<Long, byte[]> timestampAndValue = data.get(increment.getRow()).get(family).get(eq.getKey()).lastEntry();
                 kvs.add(new KeyValue(increment.getRow(), family, eq.getKey(), timestampAndValue.getKey(), timestampAndValue.getValue()));
@@ -768,21 +797,6 @@ public class MockHTable implements Table {
      * {@inheritDoc}
      */
     @Override
-    public long getWriteBufferSize() {
-        return 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setWriteBufferSize(long writeBufferSize) throws IOException {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public <R extends Message> Map<byte[], R> batchCoprocessorService(
             Descriptors.MethodDescriptor methodDescriptor, Message request,
             byte[] startKey, byte[] endKey, R responsePrototype) throws ServiceException {
@@ -797,5 +811,68 @@ public class MockHTable implements Table {
                                                             Message request, byte[] startKey, byte[] endKey, R responsePrototype,
                                                             Batch.Callback<R> callback) throws ServiceException {
         throw new RuntimeException(this.getClass() + " does NOT implement this method.");
+    }
+
+    public RegionLocator getRegionLocator() {
+        return new RegionLocator() {
+            @Override
+            public HRegionLocation getRegionLocation(byte[] bytes) throws IOException {
+                return new HRegionLocation(null, ServerName.valueOf("localhost:0", 0));
+            }
+
+            @Override
+            public HRegionLocation getRegionLocation(byte[] bytes, boolean b) throws IOException {
+                return new HRegionLocation(null, ServerName.valueOf("localhost:0", 0));
+            }
+
+            @Override
+            public HRegionLocation getRegionLocation(byte[] bytes, int regionId, boolean b) throws IOException {
+                return new HRegionLocation(null, ServerName.valueOf("localhost:0", 0));
+            }
+
+            @Override
+            public List<HRegionLocation> getRegionLocations(byte[] bytes, boolean b) throws IOException {
+                return Collections.singletonList(getRegionLocation(bytes, b));
+            }
+
+            @Override
+            public void clearRegionLocationCache() {
+            }
+
+            @Override
+            public List<HRegionLocation> getAllRegionLocations() throws IOException {
+                return null;
+            }
+
+            @Override
+            public byte[][] getStartKeys() throws IOException {
+                return getStartEndKeys().getFirst();
+            }
+
+            @Override
+            public byte[][] getEndKeys() throws IOException {
+                return getStartEndKeys().getSecond();
+            }
+
+            @Override
+            public Pair<byte[][], byte[][]> getStartEndKeys() throws IOException {
+                final byte[][] startKeyList = new byte[1][];
+                final byte[][] endKeyList = new byte[1][];
+
+                startKeyList[0] = new byte[0];
+                endKeyList[0] = new byte[]{(byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff};
+
+                return new Pair<>(startKeyList, endKeyList);
+            }
+
+            @Override
+            public TableName getName() {
+                return MockHTable.this.getName();
+            }
+
+            @Override
+            public void close() throws IOException {
+            }
+        };
     }
 }

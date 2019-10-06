@@ -13,6 +13,7 @@ import org.ojai.Document;
 import org.ojai.FieldPath;
 import org.ojai.Value;
 import org.ojai.Value.Type;
+import org.ojai.exceptions.TypeException;
 import org.ojai.store.DocumentMutation;
 import org.ojai.store.MutationOp;
 import org.ojai.store.exceptions.StoreException;
@@ -1772,6 +1773,178 @@ public class HDocumentMutation implements DocumentMutation {
         mutationOps.add(op);
 
         return this;
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(FieldPath path, byte dec) {
+        return increment(path, -dec);
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(String path, byte dec) {
+        return increment(path, -dec);
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(FieldPath path, short dec) {
+        return increment(path, -dec);
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(String path, short dec) {
+        return increment(path, -dec);
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(String path, int dec) {
+        return increment(path, -dec);
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(FieldPath path, int dec) {
+        return increment(path, -dec);
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(FieldPath path, long dec) {
+        return increment(path, -dec);
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(String path, long dec) {
+        return increment(path, -dec);
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(String path, float dec) {
+        return increment(path, -dec);
+    }
+
+    /**
+     * Atomically decrement the field specified by the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(FieldPath path, float dec) {
+        return increment(path, -dec);
+    }
+
+    public HDocumentMutation decrement(String path, double dec) {
+        return increment(path, -dec);
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(FieldPath path, double dec) {
+        return increment(path, -dec);
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(String path, BigDecimal dec) {
+        return increment(path, dec.negate());
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(FieldPath path, BigDecimal dec) {
+        return increment(path, dec.negate());
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(String path, Number dec) {
+        return increment(path, negate(dec));
+    }
+
+    /**
+     * Atomically decrement the existing value at given the FieldPath by the given value.
+     *
+     * @param path the FieldPath to apply this decrement operation
+     * @param dec  decrement to apply to a field - can be positive or negative
+     */
+    public HDocumentMutation decrement(FieldPath path, Number dec) {
+        return increment(path, negate(dec));
+    }
+
+    public static Number negate(Number value) {
+        if (value instanceof Short) {
+            return -((Short) value);
+        } else if (value instanceof Integer) {
+            return -((Integer) value);
+        } else if (value instanceof Long) {
+            return -((Long) value);
+        } else if (value instanceof Float) {
+            return -((Float) value);
+        } else if (value instanceof Double) {
+            return -((Double) value);
+        } else if (value instanceof BigDecimal) {
+            return ((BigDecimal) value).negate();
+        } else {
+            throw new TypeException("Unsupported number type: " + value.getClass());
+        }
     }
 
     /**
