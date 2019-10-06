@@ -21,7 +21,7 @@ Releases of HDocDB are deployed to Maven Central.
 <dependency>
     <groupId>io.hdocdb</groupId>
     <artifactId>hdocdb</artifactId>
-    <version>0.0.3</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -43,7 +43,7 @@ mvn clean package -DskipTests
 
 Currently HDocDB does not make use of coprocessors.  However, HDocDB does make use of server-side filters.  To deploy HDocDB:
 
-* Add target/hdocdb-0.0.3.jar to the classpath of all HBase region servers.
+* Add target/hdocdb-1.0.0.jar to the classpath of all HBase region servers.
 * Restart the HBase region servers.
     
 
@@ -255,7 +255,7 @@ The HDocDB shell is a command-line shell with [Nashorn](http://openjdk.java.net/
 To start the HDocDB shell you need to use `jrunscript` that comes with Java (typically found in $JAVA_HOME/bin).
 
 ```
-$ jrunscript -cp <hbase-conf-dir>:target/hdocdb-0.0.3.jar -f target/classes/shell/hdocdb.js -f - 
+$ jrunscript -cp <hbase-conf-dir>:target/hdocdb-1.0.0.jar -f target/classes/shell/hdocdb.js -f - 
 ```
 
 Here is a sample run.
@@ -281,7 +281,7 @@ nashorn> db.mycoll.delete( "jdoe" )
 To run a script:
 
 ```
-$ jrunscript -cp <hbase-conf-dir>:target/hdocdb-0.0.3.jar -f target/classes/shell/hdocdb.js -f <script>
+$ jrunscript -cp <hbase-conf-dir>:target/hdocdb-1.0.0.jar -f target/classes/shell/hdocdb.js -f <script>
 ```
 	
 ## Implementation Notes
