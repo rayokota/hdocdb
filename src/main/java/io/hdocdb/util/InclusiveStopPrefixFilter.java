@@ -1,8 +1,10 @@
 package io.hdocdb.util;
 
+import org.apache.hadoop.hbase.ByteBufferExtendedCell;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.exceptions.DeserializationException;
 import org.apache.hadoop.hbase.filter.FilterBase;
+import org.apache.hadoop.hbase.util.ByteBufferUtils;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.Externalizable;
@@ -31,7 +33,7 @@ public class InclusiveStopPrefixFilter extends FilterBase implements Externaliza
     }
 
     @Override
-    public ReturnCode filterKeyValue(Cell v) {
+    public ReturnCode filterCell(Cell v) {
         if (done) return ReturnCode.NEXT_ROW;
         return ReturnCode.INCLUDE;
     }
@@ -43,8 +45,9 @@ public class InclusiveStopPrefixFilter extends FilterBase implements Externaliza
         return v;
     }
 
-    public boolean filterRowKey(byte[] buffer, int offset, int length) {
-        if (buffer == null) {
+    @Override
+    public boolean filterRowKey(Cell firstRowCell) {
+        if (firstRowCell == null) {
             //noinspection RedundantIfStatement
             if (this.stopRowPrefix == null) {
                 return true; //filter...
@@ -53,9 +56,15 @@ public class InclusiveStopPrefixFilter extends FilterBase implements Externaliza
         }
         // if stopRowPrefix is <= buffer, then true, filter row.
         // the only difference between InclusiveStopFilter is to use stopRowPrefix.length instead of length below
-        int cmp = Bytes.compareTo(stopRowPrefix, 0, stopRowPrefix.length,
-                buffer, offset, stopRowPrefix.length);
-
+        int cmp;
+        if (firstRowCell instanceof ByteBufferExtendedCell) {
+            cmp = ByteBufferUtils.compareTo(stopRowPrefix, 0, stopRowPrefix.length,
+                ((ByteBufferExtendedCell) firstRowCell).getRowByteBuffer(),
+                ((ByteBufferExtendedCell) firstRowCell).getRowPosition(), stopRowPrefix.length);
+        } else {
+            cmp = Bytes.compareTo(stopRowPrefix, 0, stopRowPrefix.length,
+                firstRowCell.getRowArray(), firstRowCell.getRowOffset(), stopRowPrefix.length);
+        }
         if (cmp < 0) {
             done = true;
         }

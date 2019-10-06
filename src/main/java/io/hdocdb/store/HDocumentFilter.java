@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +41,7 @@ public class HDocumentFilter extends FilterBase implements Externalizable {
     }
 
     @Override
-    public Filter.ReturnCode filterKeyValue(Cell cell) {
+    public Filter.ReturnCode filterCell(Cell cell) {
         return ReturnCode.INCLUDE_AND_NEXT_COL;
     }
 
