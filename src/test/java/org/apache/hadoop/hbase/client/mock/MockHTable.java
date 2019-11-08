@@ -30,7 +30,6 @@ import org.apache.hadoop.hbase.client.Append;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Durability;
 import org.apache.hadoop.hbase.client.Get;
-import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Increment;
 import org.apache.hadoop.hbase.client.Mutation;
 import org.apache.hadoop.hbase.client.Put;
@@ -533,26 +532,20 @@ public class MockHTable implements Table {
         return getScanner(scan);
     }
 
-    private <K, V> V forceFind(Map<K, V> map, K key, V newObject) {
-        V data = map.putIfAbsent(key, newObject);
-        if (data == null) {
-            data = newObject;
-        }
-        return data;
-    }
-
     /**
      * {@inheritDoc}
      */
     @Override
     public void put(Put put) throws IOException {
         byte[] row = put.getRow();
-        NavigableMap<byte[], NavigableMap<byte[], NavigableMap<Long, byte[]>>> rowData = forceFind(data, row, new ConcurrentSkipListMap<>(Bytes.BYTES_COMPARATOR));
+        NavigableMap<byte[], NavigableMap<byte[], NavigableMap<Long, byte[]>>> rowData =
+            data.computeIfAbsent(row, k -> new ConcurrentSkipListMap<>(Bytes.BYTES_COMPARATOR));
         for (byte[] family : put.getFamilyCellMap().keySet()) {
             if (!columnFamilies.contains(new String(family))) {
                 throw new RuntimeException("Not Exists columnFamily : " + new String(family));
             }
-            NavigableMap<byte[], NavigableMap<Long, byte[]>> familyData = forceFind(rowData, family, new ConcurrentSkipListMap<>(Bytes.BYTES_COMPARATOR));
+            NavigableMap<byte[], NavigableMap<Long, byte[]>> familyData =
+                rowData.computeIfAbsent(family, k -> new ConcurrentSkipListMap<>(Bytes.BYTES_COMPARATOR));
             for (Cell kv : put.getFamilyCellMap().get(family)) {
                 long ts = kv.getTimestamp();
                 if (ts == HConstants.LATEST_TIMESTAMP) {
@@ -562,7 +555,8 @@ public class MockHTable implements Table {
                     ts = System.currentTimeMillis();
                 }
                 byte[] qualifier = CellUtil.cloneQualifier(kv);
-                NavigableMap<Long, byte[]> qualifierData = forceFind(familyData, qualifier, new ConcurrentSkipListMap<>());
+                NavigableMap<Long, byte[]> qualifierData =
+                    familyData.computeIfAbsent(qualifier, k -> new ConcurrentSkipListMap<>());
                 qualifierData.put(ts, CellUtil.cloneValue(kv));
             }
         }
