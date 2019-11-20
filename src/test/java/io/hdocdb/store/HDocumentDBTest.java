@@ -17,7 +17,6 @@ public class HDocumentDBTest {
     protected static final TableName IDX_TABLE_TEMP = TableName.valueOf("_IDX_testtemp");
 
     protected static Ticker ticker;
-    protected static Connection conn;
     protected static HDocumentDB hdocdb;
     protected static HDocumentCollection mainColl;
 
@@ -29,8 +28,7 @@ public class HDocumentDBTest {
             Configuration config = new Configuration();
             config.set("hbase.zookeeper.quorum", "127.0.0.1");
             config.set("zookeeper.znode.parent", "/hbase-unsecure");
-            conn = ConnectionFactory.createConnection(config);
-            hdocdb = new HDocumentDB(conn, ticker);
+            hdocdb = new HDocumentDB(config, ticker);
         } else {
             hdocdb = new MockHDocumentDB(ticker);
         }

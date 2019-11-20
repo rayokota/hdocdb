@@ -113,8 +113,8 @@ public class HDocumentFilter extends FilterBase implements Externalizable {
         output.writeByte(condition.isLeaf() ? 1 : 0);
         condition.writeExternal(output);
         output.writeInt(paths.length);
-        for (int i = 0; i < paths.length; i++) {
-            output.writeUTF(paths[i]);
+        for (String path : paths) {
+            output.writeUTF(path);
         }
     }
 

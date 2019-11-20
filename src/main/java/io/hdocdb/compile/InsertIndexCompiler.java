@@ -48,11 +48,11 @@ public class InsertIndexCompiler {
                         if (!indexPuts.isEmpty()) {
                             Object[] results = new Object[indexPuts.size()];
                             indexTable.batch(indexPuts, results);
-                            for (int i = 0; i < results.length; i++) {
-                                if (results[i] == null) {
+                            for (Object result : results) {
+                                if (result == null) {
                                     throw new StoreException("Failed to communicate with server");
-                                } else if (results[i] instanceof Throwable) {
-                                    Throwables.propagate((Throwable) results[i]);
+                                } else if (result instanceof Throwable) {
+                                    Throwables.propagate((Throwable) result);
                                 }
                             }
                         }

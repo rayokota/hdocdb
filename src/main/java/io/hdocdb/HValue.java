@@ -128,10 +128,8 @@ public class HValue implements Value, Comparable<HValue> {
             return ((HDocument)map).shallowCopy();
         } else {
             HDocument result = new HDocument();
-            Iterator<? extends Map.Entry<String, ? extends Object>> itr = map.entrySet().iterator();
 
-            while (itr.hasNext()) {
-                Map.Entry<String, ? extends Object> entry = itr.next();
+            for (Map.Entry<String, ? extends Object> entry : map.entrySet()) {
                 HValue child = initFromObject(entry.getValue());
                 result.set(Fields.quoteFieldName(entry.getKey()), child);
             }
@@ -145,10 +143,8 @@ public class HValue implements Value, Comparable<HValue> {
             return ((HDocument)value).shallowCopy();
         } else {
             HDocument result = new HDocument();
-            Iterator<Map.Entry<String, Value>> itr = value.iterator();
 
-            while (itr.hasNext()) {
-                Map.Entry<String, Value> e = itr.next();
+            for (Map.Entry<String, Value> e : value) {
                 HValue child = initFromObject(e.getValue());
                 result.set(Fields.quoteFieldName(e.getKey()), child);
             }
@@ -159,30 +155,33 @@ public class HValue implements Value, Comparable<HValue> {
 
     public static HValue initFromJson(ScriptObjectMirror json) {
         String clsName = json.getClassName();
-        if (clsName.equals("Date")) {
-            long timestamp =  ((Number) json.callMember("getTime")).longValue();
-            return new HValue(new OTimestamp(timestamp));
-        } else if (clsName.equals("Array")) {
-            HList result = new HList();
-            Collection<Object> values = json.values();
-            int i = 0;
-            for (Object value : values) {
-                result.set(i++, initFromObject(value));
-            }
-            return result;
-        } else if (clsName.equals("Object")) {
-            HDocument result = new HDocument();
-            for (Map.Entry<String, Object> entry : json.entrySet()) {
-                if (entry.getKey().contains(".")) {
-                    throw new IllegalArgumentException("Key names cannot contain dot (.)");
+        switch (clsName) {
+            case "Date":
+                long timestamp = ((Number) json.callMember("getTime")).longValue();
+                return new HValue(new OTimestamp(timestamp));
+            case "Array": {
+                HList result = new HList();
+                Collection<Object> values = json.values();
+                int i = 0;
+                for (Object value : values) {
+                    result.set(i++, initFromObject(value));
                 }
-                if (entry.getKey().startsWith("$")) {
-                    throw new IllegalArgumentException("Key names cannot start with $");
-                }
-                HValue child = initFromObject(entry.getValue());
-                result.set(Fields.quoteFieldName(entry.getKey()), child);
+                return result;
             }
-            return result;
+            case "Object": {
+                HDocument result = new HDocument();
+                for (Map.Entry<String, Object> entry : json.entrySet()) {
+                    if (entry.getKey().contains(".")) {
+                        throw new IllegalArgumentException("Key names cannot contain dot (.)");
+                    }
+                    if (entry.getKey().startsWith("$")) {
+                        throw new IllegalArgumentException("Key names cannot start with $");
+                    }
+                    HValue child = initFromObject(entry.getValue());
+                    result.set(Fields.quoteFieldName(entry.getKey()), child);
+                }
+                return result;
+            }
         }
         return null;
     }

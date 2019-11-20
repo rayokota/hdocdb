@@ -24,8 +24,8 @@ public class Paths {
     public static String[] asPathStrings(Collection<FieldPath> fieldPaths, String... paths) {
         Set<String> allPaths = Sets.newHashSet();
         if (fieldPaths != null) {
-            for (Iterator<FieldPath> iter = fieldPaths.iterator(); iter.hasNext(); ) {
-                allPaths.add(iter.next().asPathString());
+            for (FieldPath fieldPath : fieldPaths) {
+                allPaths.add(fieldPath.asPathString());
             }
         }
         if (paths != null) {
@@ -40,13 +40,13 @@ public class Paths {
     public static String[] asPathStrings(Collection<FieldPath> fieldPaths1, Collection<FieldPath> fieldPaths2) {
         Set<String> allPaths = Sets.newHashSet();
         if (fieldPaths1 != null) {
-            for (Iterator<FieldPath> iter = fieldPaths1.iterator(); iter.hasNext(); ) {
-                allPaths.add(iter.next().asPathString());
+            for (FieldPath fieldSegments : fieldPaths1) {
+                allPaths.add(fieldSegments.asPathString());
             }
         }
         if (fieldPaths2 != null) {
-            for (Iterator<FieldPath> iter = fieldPaths2.iterator(); iter.hasNext(); ) {
-                allPaths.add(iter.next().asPathString());
+            for (FieldPath fieldSegments : fieldPaths2) {
+                allPaths.add(fieldSegments.asPathString());
             }
         }
         List<String> result = Lists.newArrayList(allPaths);

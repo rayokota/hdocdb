@@ -51,10 +51,8 @@ public class HList extends HContainer implements List<Object> {
 
     public Object[] toArray() {
         ArrayList<Object> objs = new ArrayList<>(elements.size());
-        Iterator<HValue> itr = elements.values().iterator();
 
-        while (itr.hasNext()) {
-            HValue kv = itr.next();
+        for (HValue kv : elements.values()) {
             objs.add(kv.getObject());
         }
 

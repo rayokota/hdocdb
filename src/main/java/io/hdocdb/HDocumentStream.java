@@ -82,10 +82,8 @@ public class HDocumentStream extends AbstractList<Document> implements DocumentS
 
     public void streamTo(DocumentListener l) {
         try {
-            Iterator<Document> iter = iterator();
 
-            while (iter.hasNext()) {
-                Document doc = iter.next();
+            for (Document doc : this) {
                 l.documentArrived(doc);
             }
         } catch (Exception e) {

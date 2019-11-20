@@ -1833,7 +1833,7 @@ public class HDocument extends HContainer implements Document, Map<String, Objec
 
         HDocument entries1 = (HDocument) o;
 
-        if (_id != null ? !_id.equals(entries1._id) : entries1._id != null) return false;
+        if (!Objects.equals(_id, entries1._id)) return false;
         return entries.equals(entries1.entries);
     }
 

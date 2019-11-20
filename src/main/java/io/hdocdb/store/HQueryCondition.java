@@ -144,7 +144,7 @@ public class HQueryCondition implements QueryCondition {
 
         HQueryCondition that = (HQueryCondition) o;
 
-        return !(root != null ? !root.equals(that.root) : that.root != null);
+        return !(!Objects.equals(root, that.root));
     }
 
     @Override

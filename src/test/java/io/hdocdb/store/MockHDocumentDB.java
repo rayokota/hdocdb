@@ -2,6 +2,7 @@ package io.hdocdb.store;
 
 import com.google.common.base.Ticker;
 import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.client.mock.MockHTable;
 
@@ -15,11 +16,11 @@ public class MockHDocumentDB extends HDocumentDB {
     private Ticker ticker;
 
     public MockHDocumentDB() throws IOException {
-        super(null);
+        super((Connection) null);
     }
 
     public MockHDocumentDB(Ticker ticker) throws IOException {
-        super(null, ticker);
+        super((Connection) null, ticker);
     }
 
     private synchronized Map<TableName, Table> getTables() {

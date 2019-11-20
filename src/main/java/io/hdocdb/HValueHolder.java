@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.Map;
+import java.util.Objects;
 
 public class HValueHolder implements Externalizable {
 
@@ -35,7 +36,7 @@ public class HValueHolder implements Externalizable {
 
         HValueHolder that = (HValueHolder) o;
 
-        return !(value != null ? !value.equals(that.value) : that.value != null);
+        return !(!Objects.equals(value, that.value));
 
     }
 

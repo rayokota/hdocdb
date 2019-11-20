@@ -6,12 +6,14 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
 import io.hdocdb.HDocument;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.KeepDeletedCells;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.Connection;
+import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Table;
 import org.ojai.Document;
 import org.ojai.FieldPath;
@@ -44,6 +46,14 @@ public class HDocumentDB extends AbstractMap<String, HDocumentCollection> {
     private Connection connection;
     private HDocumentCollection indexCollection;
     private LoadingCache<TableName, Map<String, Index>> indexes;
+
+    public HDocumentDB(Configuration config) throws IOException {
+        this(ConnectionFactory.createConnection(config), Ticker.systemTicker());
+    }
+
+    public HDocumentDB(Configuration config, Ticker ticker) throws IOException {
+        this(ConnectionFactory.createConnection(config), ticker);
+    }
 
     public HDocumentDB(Connection connection) throws IOException {
         this(connection, Ticker.systemTicker());
