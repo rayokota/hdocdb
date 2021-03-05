@@ -1,11 +1,11 @@
 # HDocDB - HBase as a JSON Document Database
 
-[![Build Status][travis-shield]][travis-link]
+[![Build Status][github-actions-shield]][github-actions-link]
 [![Maven][maven-shield]][maven-link]
 [![Javadoc][javadoc-shield]][javadoc-link]
 
-[travis-shield]: https://travis-ci.org/rayokota/hdocdb.svg?branch=master
-[travis-link]: https://travis-ci.org/rayokota/hdocdb
+[github-actions-shield]: https://github.com/rayokota/hdocdb/workflows/build/badge.svg
+[github-actions-link]: https://github.com/rayokota/hdocdb/actions
 [maven-shield]: https://img.shields.io/maven-central/v/io.hdocdb/hdocdb.svg
 [maven-link]: https://search.maven.org/#search%7Cga%7C1%7Cio.hdocdb
 [javadoc-shield]: https://javadoc.io/badge/io.hdocdb/hdocdb.svg?color=blue
