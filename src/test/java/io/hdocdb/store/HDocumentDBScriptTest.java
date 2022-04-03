@@ -47,9 +47,9 @@ public class HDocumentDBScriptTest {
                 .allowHostAccess(customMapping)
                 .allowHostClassLookup(s -> true)
                 .option("js.ecmascript-version", "2021")
-                // The following two options are for Nashorn compatibility
+                // The following two options are for Nashorn syntax extensions
                 .allowExperimentalOptions(true)
-                .option("js.nashorn-compat", "true"));
+                .option("js.syntax-extensions", "true"));
     }
 
     @BeforeClass
