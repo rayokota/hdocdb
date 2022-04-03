@@ -30,6 +30,7 @@ import org.apache.hadoop.hbase.client.Append;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Durability;
 import org.apache.hadoop.hbase.client.Get;
+import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Increment;
 import org.apache.hadoop.hbase.client.Mutation;
 import org.apache.hadoop.hbase.client.Put;
@@ -49,6 +50,7 @@ import org.apache.hadoop.hbase.io.TimeRange;
 import org.apache.hadoop.hbase.ipc.CoprocessorRpcChannel;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.hbase.util.Pair;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +65,8 @@ import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentSkipListMap;
+
+import static org.mockito.AdditionalAnswers.delegatesTo;
 
 /**
  * MockHTable.
@@ -155,7 +159,7 @@ public class MockHTable implements Table {
      * {@inheritDoc}
      */
     @Override
-    public void mutateRow(RowMutations rm) throws IOException {
+    public Result mutateRow(RowMutations rm) throws IOException {
         // currently only support Put and Delete
         long maxTs = System.currentTimeMillis();
         for (Mutation mutation : rm.getMutations()) {
@@ -174,6 +178,8 @@ public class MockHTable implements Table {
                 Thread.sleep(maxTs - now + 1);
             } catch (InterruptedException ignored) { }
         }
+        // results of Increment/Append operations, which are currently not supported
+        return Result.EMPTY_RESULT;
     }
 
     /**
@@ -871,5 +877,9 @@ public class MockHTable implements Table {
             public void close() throws IOException {
             }
         };
+    }
+
+    public HTable asHTable() {
+        return Mockito.mock(HTable.class, delegatesTo(this));
     }
 }

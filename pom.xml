@@ -34,8 +34,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <graalvm.version>22.0.0.2</graalvm.version>
-        <hbase.version>2.2.1</hbase.version>
-        <jackson.version>2.10.0</jackson.version>
+        <hbase.version>2.4.11</hbase.version>
+        <jackson.version>2.13.2</jackson.version>
         <ojai.version>1.1</ojai.version>
     </properties>
 
@@ -96,6 +96,11 @@
             <groupId>org.graalvm.js</groupId>
             <artifactId>js-scriptengine</artifactId>
             <version>${graalvm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>4.4.0</version>
         </dependency>
     </dependencies>
 
