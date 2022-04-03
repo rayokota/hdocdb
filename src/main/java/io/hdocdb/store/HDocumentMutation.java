@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import io.hdocdb.HDocument;
 import io.hdocdb.HList;
 import io.hdocdb.HValue;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.RowMutations;
@@ -114,14 +113,10 @@ public class HDocumentMutation implements DocumentMutation {
     public HDocumentMutation() {
     }
 
-    public HDocumentMutation(ScriptObjectMirror json) {
-        for (Map.Entry<String, Object> entry : json.entrySet()) {
-            String key = entry.getKey();
+    public HDocumentMutation(org.graalvm.polyglot.Value json) {
+        for (String key : json.getMemberKeys()) {
             if (key.startsWith("$")) {
-                if (!(entry.getValue() instanceof ScriptObjectMirror)) {
-                    throw new IllegalArgumentException("Illegal operator value: " + entry.getValue());
-                }
-                ScriptObjectMirror value = (ScriptObjectMirror) entry.getValue();
+                org.graalvm.polyglot.Value value = json.getMember(key);
                 switch (key) {
                     case "$set":
                         processJsonSet(value);
@@ -153,55 +148,56 @@ public class HDocumentMutation implements DocumentMutation {
         }
     }
 
-    protected void processJsonSet(ScriptObjectMirror json) {
-        for (Map.Entry<String, Object> entry : json.entrySet()) {
-            setOrReplace(entry.getKey(), HValue.initFromObject(entry.getValue()));
+    protected void processJsonSet(org.graalvm.polyglot.Value json) {
+        for (String key : json.getMemberKeys()) {
+            setOrReplace(key, HValue.initFromObject(json.getMember(key)));
         }
     }
 
-    protected void processJsonUnset(ScriptObjectMirror json) {
-        for (Map.Entry<String, Object> entry : json.entrySet()) {
-            delete(entry.getKey());
+    protected void processJsonUnset(org.graalvm.polyglot.Value json) {
+        for (String key : json.getMemberKeys()) {
+            delete(key);
         }
     }
 
-    protected void processJsonInc(ScriptObjectMirror json) {
-        for (Map.Entry<String, Object> entry : json.entrySet()) {
-            if (entry.getValue() instanceof Number) {
-                increment(entry.getKey(), (Number) entry.getValue());
+    protected void processJsonInc(org.graalvm.polyglot.Value json) {
+        for (String key : json.getMemberKeys()) {
+            org.graalvm.polyglot.Value value = json.getMember(key);
+            if (value.isNumber()) {
+                increment(key, value.asLong());
             } else {
-                throw new IllegalArgumentException("Illegal arg to $inc: " + entry.getValue());
+                throw new IllegalArgumentException("Illegal arg to $inc: " + value);
             }
         }
     }
 
-    protected void processJsonAppend(ScriptObjectMirror json) {
-        for (Map.Entry<String, Object> entry : json.entrySet()) {
-            HValue value = HValue.initFromObject(entry.getValue());
+    protected void processJsonAppend(org.graalvm.polyglot.Value json) {
+        for (String key : json.getMemberKeys()) {
+            HValue value = HValue.initFromObject(json.getMember(key));
             if (value.getType() == Type.STRING) {
-                append(entry.getKey(), value.getString());
+                append(key, value.getString());
             } else if (value.getType() == Type.ARRAY) {
-                append(entry.getKey(), value.getList());
+                append(key, value.getList());
             } else {
-                throw new IllegalArgumentException("Illegal arg to $append: " + entry.getValue());
+                throw new IllegalArgumentException("Illegal arg to $append: " + json.getMember(key));
             }
         }
     }
 
-    protected void processJsonPush(ScriptObjectMirror json) {
-        for (Map.Entry<String, Object> entry : json.entrySet()) {
-            HValue value = HValue.initFromObject(entry.getValue());
-            append(entry.getKey(), ImmutableList.of(value));
+    protected void processJsonPush(org.graalvm.polyglot.Value json) {
+        for (String key : json.getMemberKeys()) {
+            HValue value = HValue.initFromObject(json.getMember(key));
+            append(key, ImmutableList.of(value));
         }
     }
 
-    protected void processJsonMerge(ScriptObjectMirror json) {
-        for (Map.Entry<String, Object> entry : json.entrySet()) {
-            HValue value = HValue.initFromObject(entry.getValue());
+    protected void processJsonMerge(org.graalvm.polyglot.Value json) {
+        for (String key : json.getMemberKeys()) {
+            HValue value = HValue.initFromObject(json.getMember(key));
             if (value.getType() == Type.MAP) {
-                merge(entry.getKey(), value.getMap());
+                merge(key, value.getMap());
             } else {
-                throw new IllegalArgumentException("Illegal arg to $merge: " + entry.getValue());
+                throw new IllegalArgumentException("Illegal arg to $merge: " + json.getMember(key));
             }
         }
     }

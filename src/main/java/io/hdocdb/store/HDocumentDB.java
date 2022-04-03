@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class HDocumentDB extends AbstractMap<String, HDocumentCollection> {
 
@@ -298,6 +300,10 @@ public class HDocumentDB extends AbstractMap<String, HDocumentCollection> {
         return connection.getTable(name);
     }
 
+    protected TableName[] listTables() throws IOException {
+        return connection.getAdmin().listTableNames();
+    }
+
     protected void dropTable(TableName name) throws IOException {
         if (tableExists(name)) {
             Admin admin = connection.getAdmin();
@@ -312,8 +318,14 @@ public class HDocumentDB extends AbstractMap<String, HDocumentCollection> {
      * The following methods are for Nashorn integration
      */
 
-    public Set<Entry<String, HDocumentCollection>> entrySet() {
-        throw new UnsupportedOperationException();
+    public Set<Map.Entry<String, HDocumentCollection>> entrySet() {
+        try {
+            return Stream.of(listTables())
+                .map(t -> new AbstractMap.SimpleEntry<>(t.getNameAsString(), get(t.getNameAsString())))
+                .collect(Collectors.toSet());
+        } catch (IOException e) {
+            throw new StoreException(e);
+        }
     }
 
     public HDocumentCollection get(Object key) {

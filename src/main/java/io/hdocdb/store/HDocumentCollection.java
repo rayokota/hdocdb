@@ -7,7 +7,6 @@ import io.hdocdb.compile.*;
 import io.hdocdb.execute.MutationPlan;
 import io.hdocdb.execute.QueryPlan;
 import io.hdocdb.util.Paths;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Table;
 import org.ojai.Document;
@@ -232,15 +231,18 @@ public class HDocumentCollection implements DocumentStore {
         return find(limit, c, Paths.asPathStrings(paths));
     }
 
-    public DocumentStream find(ScriptObjectMirror condition) {
+    public DocumentStream find(org.graalvm.polyglot.Value condition) {
         return find(new HQueryCondition(condition));
     }
 
-    public DocumentStream find(ScriptObjectMirror condition, ScriptObjectMirror paths) {
+    public DocumentStream find(org.graalvm.polyglot.Value condition,
+                               org.graalvm.polyglot.Value paths) {
         return find(new HQueryCondition(condition), Paths.asPathStrings(paths));
     }
 
-    public DocumentStream find(int limit, ScriptObjectMirror condition, ScriptObjectMirror paths) {
+    public DocumentStream find(int limit,
+                               org.graalvm.polyglot.Value condition,
+                               org.graalvm.polyglot.Value paths) {
         return find(limit, new HQueryCondition(condition), Paths.asPathStrings(paths));
     }
 
@@ -358,7 +360,7 @@ public class HDocumentCollection implements DocumentStore {
         insertOrReplace(id, doc);
     }
 
-    public void insertOrReplace(ScriptObjectMirror json) {
+    public void insertOrReplace(org.graalvm.polyglot.Value json) {
         HValue value = HValue.initFromObject(json);
         if (value.getType() != Value.Type.MAP) {
             throw new StoreException("JSON not of type MAP");
@@ -436,11 +438,13 @@ public class HDocumentCollection implements DocumentStore {
         update(new HValue(_id), m);
     }
 
-    public void update(ScriptObjectMirror condition, ScriptObjectMirror m) throws StoreException {
+    public void update(org.graalvm.polyglot.Value condition, org.graalvm.polyglot.Value m) throws StoreException {
         update(condition, m, false);
     }
 
-    public void update(ScriptObjectMirror condition, ScriptObjectMirror m, boolean multi) throws StoreException {
+    public void update(org.graalvm.polyglot.Value condition,
+                       org.graalvm.polyglot.Value m,
+                       boolean multi) throws StoreException {
         HQueryCondition c = new HQueryCondition(condition);
         HDocumentMutation mutation = new HDocumentMutation(m);
         DocumentStream stream = find(c);
@@ -570,7 +574,7 @@ public class HDocumentCollection implements DocumentStore {
         insert(id, doc);
     }
 
-    public void insert(ScriptObjectMirror json) {
+    public void insert(org.graalvm.polyglot.Value json) {
         HValue value = HValue.initFromObject(json);
         if (value.getType() != Value.Type.MAP) {
             throw new StoreException("JSON not of type MAP");
@@ -668,7 +672,7 @@ public class HDocumentCollection implements DocumentStore {
         replace(id, doc);
     }
 
-    public void replace(ScriptObjectMirror json) throws StoreException {
+    public void replace(org.graalvm.polyglot.Value json) throws StoreException {
         HValue value = HValue.initFromObject(json);
         if (value.getType() != Value.Type.MAP) {
             throw new StoreException("JSON not of type MAP");
@@ -869,7 +873,9 @@ public class HDocumentCollection implements DocumentStore {
         return checkAndMutate(new HValue(_id), condition, m);
     }
 
-    public boolean checkAndMutate(String _id, ScriptObjectMirror condition, ScriptObjectMirror m) throws StoreException {
+    public boolean checkAndMutate(String _id,
+                                  org.graalvm.polyglot.Value condition,
+                                  org.graalvm.polyglot.Value m) throws StoreException {
         return checkAndMutate(_id, new HQueryCondition(condition), new HDocumentMutation(m));
     }
 
@@ -900,7 +906,7 @@ public class HDocumentCollection implements DocumentStore {
         return checkAndDelete(new HValue(_id), condition);
     }
 
-    public boolean checkAndDelete(String _id, ScriptObjectMirror condition) throws StoreException {
+    public boolean checkAndDelete(String _id, org.graalvm.polyglot.Value condition) throws StoreException {
         return checkAndDelete(_id, new HQueryCondition(condition));
     }
 
@@ -933,7 +939,9 @@ public class HDocumentCollection implements DocumentStore {
         return checkAndReplace(new HValue(_id), condition, doc);
     }
 
-    public boolean checkAndReplace(String _id, ScriptObjectMirror condition, ScriptObjectMirror json) throws StoreException {
+    public boolean checkAndReplace(String _id,
+                                   org.graalvm.polyglot.Value condition,
+                                   org.graalvm.polyglot.Value json) throws StoreException {
         HValue value = HValue.initFromObject(json);
         if (value.getType() != Value.Type.MAP) {
             throw new StoreException("JSON not of type MAP");
@@ -1063,7 +1071,7 @@ public class HDocumentCollection implements DocumentStore {
         return findOne(condition, (String[])null);
     }
 
-    public Document findOne(ScriptObjectMirror condition) throws StoreException {
+    public Document findOne(org.graalvm.polyglot.Value condition) throws StoreException {
         return findOne(new HQueryCondition(condition));
     }
 
@@ -1072,7 +1080,8 @@ public class HDocumentCollection implements DocumentStore {
         return iter.hasNext() ? iter.next() : null;
     }
 
-    public Document findOne(ScriptObjectMirror condition, ScriptObjectMirror paths) {
+    public Document findOne(org.graalvm.polyglot.Value condition,
+                            org.graalvm.polyglot.Value paths) {
         return findOne(new HQueryCondition(condition), Paths.asPathStrings(paths));
     }
 
@@ -1083,9 +1092,9 @@ public class HDocumentCollection implements DocumentStore {
         insertOrReplace(document);
     }
 
-    public void save(ScriptObjectMirror json) {
-        if (json.get("_id") == null) {
-            json.put("_id", UUID.randomUUID().toString());
+    public void save(org.graalvm.polyglot.Value json) {
+        if (!json.hasMember("_id")) {
+            json.putMember("_id", UUID.randomUUID().toString());
         }
         insertOrReplace(json);
     }

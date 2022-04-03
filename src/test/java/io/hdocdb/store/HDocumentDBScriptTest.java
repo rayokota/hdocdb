@@ -1,19 +1,56 @@
 package io.hdocdb.store;
 
+import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.HostAccess;
+import org.graalvm.polyglot.Value;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.ojai.Document;
 
+import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 public class HDocumentDBScriptTest {
 
     private static boolean useMock = HDocumentDBTest.useMock;
     private static ScriptEngineManager manager = new ScriptEngineManager();
-    private static ScriptEngine engine = manager.getEngineByName("JavaScript");
+    private static ScriptEngine engine;
+    static {
+        HostAccess customMapping = HostAccess.newBuilder()
+            // The following options are from HostAccess.ALL, and we add the
+            // targetTypeMapping to disambugate calls to overridden methods
+            // that take both Document and Value
+            .allowPublicAccess(true)
+            .allowAllImplementations(true)
+            .allowAllClassImplementations(true)
+            .allowArrayAccess(true)
+            .allowListAccess(true)
+            .allowBufferAccess(true)
+            .allowIterableAccess(true)
+            .allowIteratorAccess(true)
+            .allowMapAccess(true)
+            .targetTypeMapping(org.graalvm.polyglot.Value.class, Document.class,
+                s -> s.isHostObject() && s.asHostObject() instanceof Document,
+                Value::asHostObject,
+                HostAccess.TargetMappingPrecedence.HIGHEST)
+            .build();
+        engine = GraalJSScriptEngine.create(null,
+            Context.newBuilder("js")
+                .allowHostAccess(customMapping)
+                .allowHostClassLookup(s -> true)
+                .option("js.ecmascript-version", "2021")
+                // The following two options are for Nashorn compatibility
+                .allowExperimentalOptions(true)
+                .option("js.nashorn-compat", "true"));
+    }
 
     @BeforeClass
     public static void init() throws Exception {

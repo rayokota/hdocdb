@@ -1,7 +1,6 @@
 package io.hdocdb.store;
 
 import io.hdocdb.HValue;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.ojai.Document;
 import org.ojai.FieldPath;
 import org.ojai.Value.Type;
@@ -26,20 +25,16 @@ public class HQueryCondition implements QueryCondition {
     public HQueryCondition() {
     }
 
-    public HQueryCondition(ScriptObjectMirror json) {
+    public HQueryCondition(org.graalvm.polyglot.Value json) {
         and();  // start an implicit and block
         processJson(json);
         close();
     }
 
-    protected void processJson(ScriptObjectMirror json) {
-        for (Map.Entry<String, Object> entry : json.entrySet()) {
-            String key = entry.getKey();
+    protected void processJson(org.graalvm.polyglot.Value json) {
+        for (String key : json.getMemberKeys()) {
+            org.graalvm.polyglot.Value value = json.getMember(key);
             if (key.startsWith("$")) {
-                if (!(entry.getValue() instanceof ScriptObjectMirror)) {
-                    throw new IllegalArgumentException("Illegal operator value: " + entry.getValue());
-                }
-                ScriptObjectMirror value = (ScriptObjectMirror) entry.getValue();
                 switch (key) {
                     case "$and":
                         and();
@@ -56,42 +51,39 @@ public class HQueryCondition implements QueryCondition {
                 }
             } else {
                 FieldPath path = FieldPath.parseFrom(key);
-                Object value = entry.getValue();
-                if (value instanceof ScriptObjectMirror) {
-                    processJsonMap(path, (ScriptObjectMirror) value);
+                if (value.hasMembers()) {
+                    processJsonMap(path, value);
                 } else {
                     add(new ConditionLeaf(path,
                             ConditionLeaf.CompareOp.EQ,
-                            HValue.initFromObject(entry.getValue())));
+                            HValue.initFromObject(value)));
                 }
             }
         }
     }
 
-    protected void processJsonList(ScriptObjectMirror json) {
-        for (Object value : json.values()) {
-            if (value instanceof ScriptObjectMirror) {
-                processJson((ScriptObjectMirror) value);
-            }
+    protected void processJsonList(org.graalvm.polyglot.Value json) {
+        for (int i = 0; i < json.getArraySize(); i++) {
+            processJson(json.getArrayElement(i));
         }
     }
 
-    protected void processJsonMap(FieldPath path, ScriptObjectMirror json) {
+    protected void processJsonMap(FieldPath path, org.graalvm.polyglot.Value json) {
         if (isLiteral(json)) {
             add(new ConditionLeaf(path,
                     ConditionLeaf.CompareOp.EQ,
                     HValue.initFromObject(json)));
         } else {
-            for (Map.Entry<String, Object> condition : json.entrySet()) {
+            for (String key : json.getMemberKeys()) {
                 add(new ConditionLeaf(path,
-                        processJsonCondition(condition.getKey()),
-                        HValue.initFromObject(condition.getValue())));
+                        processJsonCondition(key),
+                        HValue.initFromObject(json.getMember(key))));
             }
         }
     }
 
-    private boolean isLiteral(ScriptObjectMirror json) {
-        Iterator<String> keySet = json.keySet().iterator();
+    private boolean isLiteral(org.graalvm.polyglot.Value json) {
+        Iterator<String> keySet = json.getMemberKeys().iterator();
         String firstKey = keySet.hasNext() ? keySet.next() : null;
         return firstKey != null && !firstKey.startsWith("$");
     }

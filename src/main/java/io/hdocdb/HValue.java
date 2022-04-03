@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import com.google.common.primitives.*;
 import io.hdocdb.store.Order;
 import io.hdocdb.util.Codec;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -25,6 +24,7 @@ import org.ojai.util.Fields;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -153,35 +153,35 @@ public class HValue implements Value, Comparable<HValue> {
         }
     }
 
-    public static HValue initFromJson(ScriptObjectMirror json) {
-        String clsName = json.getClassName();
-        switch (clsName) {
-            case "Date":
-                long timestamp = ((Number) json.callMember("getTime")).longValue();
-                return new HValue(new OTimestamp(timestamp));
-            case "Array": {
-                HList result = new HList();
-                Collection<Object> values = json.values();
-                int i = 0;
-                for (Object value : values) {
-                    result.set(i++, initFromObject(value));
-                }
-                return result;
+    public static HValue initFromJson(org.graalvm.polyglot.Value json) {
+        // TODO date
+        if (json.isNull()) {
+            return HValue.NULL;
+        } else if (json.isBoolean()) {
+            return new HValue(json.asBoolean());
+        } else if (json.isNumber()) {
+            return new HValue(json.asDouble());
+        } else if (json.isString()) {
+            return new HValue(json.asString());
+        } else if (json.hasArrayElements()) {
+            HList result = new HList();
+            for (int i = 0; i < json.getArraySize(); i++) {
+                result.set(i, initFromObject(json.getArrayElement(i)));
             }
-            case "Object": {
-                HDocument result = new HDocument();
-                for (Map.Entry<String, Object> entry : json.entrySet()) {
-                    if (entry.getKey().contains(".")) {
-                        throw new IllegalArgumentException("Key names cannot contain dot (.)");
-                    }
-                    if (entry.getKey().startsWith("$")) {
-                        throw new IllegalArgumentException("Key names cannot start with $");
-                    }
-                    HValue child = initFromObject(entry.getValue());
-                    result.set(Fields.quoteFieldName(entry.getKey()), child);
+            return result;
+        } else if (json.hasMembers()) {
+            HDocument result = new HDocument();
+            for (String key : json.getMemberKeys()) {
+                if (key.contains(".")) {
+                    throw new IllegalArgumentException("Key names cannot contain dot (.)");
                 }
-                return result;
+                if (key.startsWith("$")) {
+                    throw new IllegalArgumentException("Key names cannot start with $");
+                }
+                HValue child = initFromObject(json.getMember(key));
+                result.set(Fields.quoteFieldName(key), child);
             }
+            return result;
         }
         return null;
     }
@@ -202,8 +202,8 @@ public class HValue implements Value, Comparable<HValue> {
             return ((HValue)value).shallowCopy();
         } else if (value == null) {
             return HValue.NULL;
-        } else if (value instanceof ScriptObjectMirror) {
-            return initFromJson((ScriptObjectMirror)value);
+        } else if (value instanceof org.graalvm.polyglot.Value) {
+            return initFromJson((org.graalvm.polyglot.Value)value);
         } else if (value instanceof Byte) {
             return new HValue((Byte)value);
         } else if (value instanceof Boolean) {

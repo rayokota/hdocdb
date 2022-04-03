@@ -44,6 +44,10 @@ public class MockHDocumentDB extends HDocumentDB {
         return getTables().get(name);
     }
 
+    protected TableName[] listTables() throws IOException {
+        return tables.keySet().toArray(new TableName[0]);
+    }
+
     protected void dropTable(TableName name) throws IOException {
         Table table = getTables().get(name);
         if (table != null) ((MockHTable)table).clear();

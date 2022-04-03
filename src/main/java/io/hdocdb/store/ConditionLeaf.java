@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class ConditionLeaf extends ConditionNode {
@@ -203,7 +204,7 @@ public class ConditionLeaf extends ConditionNode {
                 return true;
             case EQ:
             case NE:
-                boolean equals = getValue().equals(value);
+                boolean equals = Objects.equals(getValue(), value);
                 return op == CompareOp.EQ && equals || op == CompareOp.NE && !equals;
             case LT:
             case LE:

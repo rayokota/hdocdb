@@ -2,7 +2,6 @@ package io.hdocdb.util;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.ojai.FieldPath;
 
 import java.util.Collection;
@@ -53,17 +52,15 @@ public class Paths {
         return result.toArray(new String[result.size()]);
     }
 
-    public static String[] asPathStrings(ScriptObjectMirror json) {
+    public static String[] asPathStrings(org.graalvm.polyglot.Value json) {
         if (json == null) return new String[0];
         List<String> paths = Lists.newArrayList();
-        for (Map.Entry<String, Object> entry : json.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            if (value instanceof Number) {
-                if (((Number)value).intValue() != 0) paths.add(key);
+        for (String key : json.getMemberKeys()) {
+            org.graalvm.polyglot.Value value = json.getMember(key);
+            if (value.isNumber()) {
+                if (value.asInt() != 0) paths.add(key);
             }
         }
         return paths.toArray(new String[paths.size()]);
     }
-
 }
