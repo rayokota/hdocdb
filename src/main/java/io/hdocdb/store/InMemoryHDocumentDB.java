@@ -10,16 +10,16 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MockHDocumentDB extends HDocumentDB {
+public class InMemoryHDocumentDB extends HDocumentDB {
 
     private Map<TableName, Table> tables;
     private Ticker ticker;
 
-    public MockHDocumentDB() throws IOException {
+    public InMemoryHDocumentDB() throws IOException {
         super((Connection) null);
     }
 
-    public MockHDocumentDB(Ticker ticker) throws IOException {
+    public InMemoryHDocumentDB(Ticker ticker) throws IOException {
         super((Connection) null, ticker);
     }
 

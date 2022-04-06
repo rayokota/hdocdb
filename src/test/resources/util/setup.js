@@ -9,9 +9,9 @@ if (!useMock) {
   db = new HDocumentDB(config)
 } else {
   print("Using mock...")
-  var MockHDocumentDB = Java.type("io.hdocdb.store.MockHDocumentDB")
-  var MockHDocDB = Java.extend(MockHDocumentDB)
-  db = new MockHDocDB() {
+  var InMemoryHDocumentDB = Java.type("io.hdocdb.store.InMemoryHDocumentDB")
+  var MockHDocumentDB = Java.extend(InMemoryHDocumentDB)
+  db = new MockHDocumentDB() {
     save: function(doc) {
       insert(doc)
     }

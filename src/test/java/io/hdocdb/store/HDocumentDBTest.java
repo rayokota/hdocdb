@@ -4,8 +4,6 @@ import com.google.common.base.Ticker;
 import com.google.common.testing.FakeTicker;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.ojai.Value;
 
 import java.io.IOException;
@@ -30,7 +28,7 @@ public class HDocumentDBTest {
             config.set("zookeeper.znode.parent", "/hbase-unsecure");
             hdocdb = new HDocumentDB(config, ticker);
         } else {
-            hdocdb = new MockHDocumentDB(ticker);
+            hdocdb = new InMemoryHDocumentDB(ticker);
         }
         mainColl = getDocumentCollection(TABLE_MAIN);
         mainColl.createIndex("testindex", "last_name", Value.Type.STRING, Order.ASCENDING, false);
