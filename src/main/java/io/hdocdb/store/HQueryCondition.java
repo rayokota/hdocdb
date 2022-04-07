@@ -3,6 +3,7 @@ package io.hdocdb.store;
 import io.hdocdb.HValue;
 import org.ojai.Document;
 import org.ojai.FieldPath;
+import org.ojai.Value;
 import org.ojai.Value.Type;
 import org.ojai.exceptions.TypeException;
 import org.ojai.store.QueryCondition;
@@ -920,6 +921,34 @@ public class HQueryCondition implements QueryCondition {
      */
     public HQueryCondition is(FieldPath path, Op op, ByteBuffer value) {
         return add(new ConditionLeaf(path, asOpType(op), new HValue(value)));
+    }
+
+    /**
+     * Adds a condition that tests if the {@code Value} at the specified
+     * {@code FieldPath} satisfies the given {@link Op} against
+     * the specified {@code Value} value.
+     *
+     * @param path  the {@code FieldPath} to test
+     * @param op    the {@code QueryCondition.Op} to apply
+     * @param value the reference {@code Value}
+     * @return {@code this} for chained invocation
+     */
+    public HQueryCondition is(String path, Op op, Value value) {
+        return is(FieldPath.parseFrom(path), op, value);
+    }
+
+    /**
+     * Adds a condition that tests if the {@code Value} at the specified
+     * {@code FieldPath} satisfies the given {@link Op} against
+     * the specified {@code Value} value.
+     *
+     * @param path  the {@code FieldPath} to test
+     * @param op    the {@code QueryCondition.Op} to apply
+     * @param value the reference {@code Value}
+     * @return {@code this} for chained invocation
+     */
+    public HQueryCondition is(FieldPath path, Op op, Value value) {
+        return add(new ConditionLeaf(path, asOpType(op), HValue.initFromValue(value)));
     }
 
     /**
