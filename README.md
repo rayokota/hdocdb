@@ -21,7 +21,7 @@ Releases of HDocDB are deployed to Maven Central.
 <dependency>
     <groupId>io.hdocdb</groupId>
     <artifactId>hdocdb</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
