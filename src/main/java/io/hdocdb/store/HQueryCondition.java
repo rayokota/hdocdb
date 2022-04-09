@@ -26,6 +26,10 @@ public class HQueryCondition implements QueryCondition {
     public HQueryCondition() {
     }
 
+    public HQueryCondition(ConditionNode root) {
+        this.root = root;
+    }
+
     public HQueryCondition(org.graalvm.polyglot.Value json) {
         and();  // start an implicit and block
         processJson(json);
@@ -112,7 +116,7 @@ public class HQueryCondition implements QueryCondition {
         }
     }
 
-    protected ConditionNode getRoot() {
+    public ConditionNode getRoot() {
         return root;
     }
 
