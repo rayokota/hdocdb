@@ -246,8 +246,7 @@ public class HDocumentDB extends AbstractMap<String, HDocumentCollection> {
 
     public Map<String, Index> getIndexes(TableName tableName) {
         try {
-            Map<String, Index> tableIndexes = indexes.get(tableName);
-            return tableIndexes != null ? tableIndexes : Collections.emptyMap();
+            return indexes.get(tableName);
         } catch (Exception e) {
             throw new StoreException(e);
         }
