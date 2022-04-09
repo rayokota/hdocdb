@@ -134,6 +134,13 @@ public class HDocumentStream extends AbstractList<Document> implements DocumentS
         if (scanner != null) scanner.close();
     }
 
+    /**
+     * Returns a query plan that was used for this DocumentStream
+     */
+    public Document getQueryPlan() {
+        return new HDocument();
+    }
+
     private HDocument next() throws IOException {
         HDocument doc = rawNext();
         while (doc != null && doc.isEmpty()) {

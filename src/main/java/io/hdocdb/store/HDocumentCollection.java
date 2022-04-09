@@ -15,6 +15,7 @@ import org.ojai.FieldPath;
 import org.ojai.Value;
 import org.ojai.store.DocumentMutation;
 import org.ojai.store.DocumentStore;
+import org.ojai.store.Query;
 import org.ojai.store.QueryCondition;
 import org.ojai.store.exceptions.DocumentExistsException;
 import org.ojai.store.exceptions.DocumentNotFoundException;
@@ -79,6 +80,78 @@ public class HDocumentCollection implements DocumentStore {
 
     public boolean isEmpty() {
         return !find(1, null, (String[])null).iterator().hasNext();
+    }
+
+    /**
+     * Begins tracking the write operations performed through this instance of {@link DocumentStore}.
+     *
+     * @see #endTrackingWrites()
+     * @see #clearTrackedWrites()
+     * @see Query#waitForTrackedWrites(String)
+     *
+     * @throws IllegalStateException if a beginTrackingWrites() was already called
+     *         and a corresponding endTrackingWrites()/clearTrackedWrites() wasn't
+     */
+    public void beginTrackingWrites() throws StoreException {
+    }
+
+    /**
+     * Begins tracking the write operations performed through this instance of {@link DocumentStore}.
+     *
+     * @param previousWritesContext previously tracked writes that were retrieved from this
+     *        {@link DocumentStore}, or from other {@link DocumentStore} instances. The tracking
+     *        begins by using this context as the base state
+     *
+     * @see #endTrackingWrites()
+     * @see #clearTrackedWrites()
+     * @see Query#waitForTrackedWrites(String)
+     *
+     * @throws NullPointerException if previousWrites is {@code null}
+     * @throws IllegalStateException if a beginTrackingWrites() was already called
+     *         and a corresponding endTrackingWrites()/clearTrackedWrites() wasn't
+     * @throws IllegalArgumentException if the specified argument can not be parsed
+     */
+    public void beginTrackingWrites(String previousWritesContext) throws StoreException {
+    }
+
+    /**
+     * Flushes any buffered writes operations for this {@link DocumentStore} and returns a
+     * writesContext which can be used to ensure that such writes are visible to ensuing queries.
+     * <p/>
+     * The write-context is cleared and tracking is stopped.
+     * <p/>
+     * This call does not isolate the writes originating from this instance of DocumentStore
+     * from other instances and as a side-effect other writes issued to the same document-store
+     * through other DocumentStore instances could get flushed.
+     *
+     * @see #beginTrackingWrites()
+     * @see #clearTrackedWrites()
+     * @see Query#waitForTrackedWrites(String)
+     *
+     * @return an encoded string representing the write-context of all writes issued,
+     *         since {@link #beginTrackingWrites()} until now, through this instance of
+     *         {@link DocumentStore}
+     *
+     * @throws StoreException if the flush failed or if the flush of any
+     *         buffered operation resulted in an error.
+     * @throws IllegalStateException if a corresponding {@link #beginTrackingWrites()} was not
+     *         called before calling this method
+     */
+    public String endTrackingWrites() throws StoreException {
+        return null;
+    }
+
+    /**
+     * Stops the writes tracking and clears any state on this {@link DocumentStore} instance.
+     * <p/>
+     * This API should be called to stop tracking the writes-context in case where
+     * {@link #beginTrackingWrites()} was previously called but a commit context is not needed
+     * anymore, for example in case of an error in any of the mutation.
+     *
+     * @throws IllegalStateException if a corresponding {@link #beginTrackingWrites()} was not
+     *         called before calling this method
+     */
+    public void clearTrackedWrites() throws StoreException {
     }
 
     /**
@@ -166,6 +239,33 @@ public class HDocumentCollection implements DocumentStore {
      */
     public DocumentStream find() throws StoreException {
         return find(null, (String[]) null);
+    }
+
+    /**
+     * <p>Executes the specified query on the DocumentStore and return a DocumentStream of the result.
+     * <p>The returned DocumentStream must be closed after retrieving the documents.
+     *
+     * @return a DocumentStream that can be used to retrieve the documents in the result
+     *
+     * @throws StoreException
+     */
+    public DocumentStream findQuery(Query query) throws StoreException {
+        // TODO query
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * <p>Executes the specified query on the DocumentStore and return a DocumentStream of the result.
+     * <p>The returned DocumentStream must be closed after retrieving the documents.
+     *
+     * @param queryJSON a Json string representation of OJAI Query
+     * @return a DocumentStream that can be used to retrieve the documents in the result
+     *
+     * @throws StoreException
+     */
+    public DocumentStream findQuery(String queryJSON) throws StoreException {
+        // TODO query
+        throw new UnsupportedOperationException();
     }
 
     /**

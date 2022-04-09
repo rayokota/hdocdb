@@ -2,6 +2,7 @@ package io.hdocdb;
 
 import org.ojai.DocumentReader;
 import org.ojai.Value.Type;
+import org.ojai.base.DocumentReaderBase;
 import org.ojai.exceptions.TypeException;
 import org.ojai.types.ODate;
 import org.ojai.types.OInterval;
@@ -18,7 +19,7 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map.Entry;
 
-class HDocumentReader implements DocumentReader {
+class HDocumentReader extends DocumentReaderBase {
 
     private Deque<IteratorWithType> stateStack = null;
     private IteratorWithType currentItr = null;
@@ -80,6 +81,14 @@ class HDocumentReader implements DocumentReader {
             currentEvent = nextEvent;
             nextEvent = null;
         }
+        return currentEvent;
+    }
+
+    /**
+     * @return the event emitted by the last call to {@link #next()}
+     */
+    @Override
+    public EventType getCurrentEvent() {
         return currentEvent;
     }
 

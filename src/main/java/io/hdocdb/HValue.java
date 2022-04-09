@@ -14,6 +14,8 @@ import org.ojai.DocumentReader;
 import org.ojai.FieldPath;
 import org.ojai.Value;
 import org.ojai.exceptions.TypeException;
+import org.ojai.json.Json;
+import org.ojai.json.JsonOptions;
 import org.ojai.store.exceptions.StoreException;
 import org.ojai.types.ODate;
 import org.ojai.types.OInterval;
@@ -635,6 +637,14 @@ public class HValue implements Value, Comparable<HValue> {
             throw new IllegalStateException("Type " + getType() + " is not comparable");
         }
         return ((Comparable)o).compareTo(that.getObject());
+    }
+
+    public String asJsonString() {
+        return asJsonString(JsonOptions.DEFAULT);
+    }
+
+    public String asJsonString(JsonOptions options) {
+        return Json.toJsonString(asReader(), options);
     }
 
     public String toString() {
