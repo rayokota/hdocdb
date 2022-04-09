@@ -17,6 +17,7 @@ import org.ojai.store.DocumentMutation;
 import org.ojai.store.DocumentStore;
 import org.ojai.store.Query;
 import org.ojai.store.QueryCondition;
+import org.ojai.store.QueryResult;
 import org.ojai.store.exceptions.DocumentExistsException;
 import org.ojai.store.exceptions.DocumentNotFoundException;
 import org.ojai.store.exceptions.MultiOpException;
@@ -227,6 +228,19 @@ public class HDocumentCollection implements DocumentStore {
 
     public Document findById(String _id, QueryCondition c, FieldPath... fields) throws StoreException {
         return findById(new HValue(_id), c, fields);
+    }
+
+    /**
+     * <p>Executes the specified query on the DocumentStore and return a QueryResult.
+     * <p>The returned QueryResult must be closed after retrieving the documents.
+     *
+     * @return a QueryResult that can be used to retrieve the documents in the result
+     *
+     * @throws StoreException
+     */
+    public QueryResult find(Query query) throws StoreException {
+        // TODO query
+        throw new UnsupportedOperationException();
     }
 
     /**

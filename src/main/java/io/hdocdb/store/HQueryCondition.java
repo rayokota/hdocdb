@@ -172,6 +172,24 @@ public class HQueryCondition implements QueryCondition {
     }
 
     /**
+     * Begins a new element-wise AND compound condition block.
+     * @param fieldPath the array expression for the fields' container
+     * @return {@code this} for chaining
+     */
+    public QueryCondition elementAnd(String fieldPath) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Begins a new element-wise AND compound condition block.
+     * @param fieldPath the array expression for the fields' container
+     * @return {@code this} for chaining
+     */
+    public QueryCondition elementAnd(FieldPath fieldPath) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * Closes a compound condition block.
      *
      * @return {@code this} for chaining
