@@ -97,7 +97,7 @@ public class HDocumentStream extends AbstractList<Document> implements DocumentS
     }
 
     public Iterator<Document> iterator() {
-        return new Iterator<Document>() {
+        return new Iterator<>() {
             HDocument next = null;
             boolean done = false;
 
@@ -240,7 +240,7 @@ public class HDocumentStream extends AbstractList<Document> implements DocumentS
         Iterator<Document> iterator = HDocumentStream.this.iterator();
 
         public Iterator<DocumentReader> iterator() {
-            return new Iterator<DocumentReader>() {
+            return new Iterator<>() {
                 Document doc = null;
 
                 public boolean hasNext() {

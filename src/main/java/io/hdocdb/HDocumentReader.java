@@ -1,6 +1,5 @@
 package io.hdocdb;
 
-import org.ojai.DocumentReader;
 import org.ojai.Value.Type;
 import org.ojai.base.DocumentReaderBase;
 import org.ojai.exceptions.TypeException;
@@ -21,9 +20,9 @@ import java.util.Map.Entry;
 
 class HDocumentReader extends DocumentReaderBase {
 
-    private Deque<IteratorWithType> stateStack = null;
+    private Deque<IteratorWithType> stateStack;
     private IteratorWithType currentItr = null;
-    private EventType nextEvent = null;
+    private EventType nextEvent;
     private EventType currentEvent = null;
     private String key;
     private HValue value;

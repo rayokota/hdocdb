@@ -11,7 +11,7 @@ public class ConditionRange {
 
     private FieldPath field;
     private Range<HValue> range;
-    private List<ConditionLeaf> conditions = Lists.newArrayList();
+    private List<ConditionLeaf> conditions;
 
     public ConditionRange(FieldPath field, Range<HValue> range, ConditionLeaf condition) {
         this.field = field;

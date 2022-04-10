@@ -158,7 +158,7 @@ public class HDocumentDBCRUDTest extends HDocumentDBTest {
         // get a single document with project
         record = mainColl.findById(new HValue("mdupont"), "last_name");
         assertEquals("mdupont", record.getIdString());
-        assertEquals(null, record.getString("first_name"));
+        assertNull(record.getString("first_name"));
         assertEquals("Dupont", record.getString("last_name"));
 
         // get single document and map it to the bean
@@ -198,7 +198,7 @@ public class HDocumentDBCRUDTest extends HDocumentDBTest {
             for (Document doc : documentStream) {
                 cnt++;
                 User u = doc.toJavaBean(User.class);
-                assertTrue(ImmutableList.<String>of("Doe", "Simon", "Smith", "Dupont", "Lehmann").contains(u.getLastName()));
+                assertTrue(ImmutableList.of("Doe", "Simon", "Smith", "Dupont", "Lehmann").contains(u.getLastName()));
                 //System.out.println("\t" + doc.toJavaBean(User.class));
             }
         }
@@ -359,7 +359,7 @@ public class HDocumentDBCRUDTest extends HDocumentDBTest {
         //System.out.println("before :\t" + mainColl.findById(new HValue("jdoe")));
 
         doc = mainColl.findById(new HValue("jdoe"));
-        assertTrue(doc.getDate("dob").compareTo(ODate.parse("1970-06-23")) == 0);
+        assertEquals(0, doc.getDate("dob").compareTo(ODate.parse("1970-06-23")));
 
         // create a mutation
         mutation = new HDocumentMutation()

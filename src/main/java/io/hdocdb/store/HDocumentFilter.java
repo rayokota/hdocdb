@@ -56,7 +56,7 @@ public class HDocumentFilter extends FilterBase implements Externalizable {
         HDocument doc = new HDocument(kvs);
         if (condition.evaluate(doc)) {
             if (!fieldPaths.isEmpty()) {
-                Iterables.removeIf(kvs, new Predicate<Cell>() {
+                Iterables.removeIf(kvs, new Predicate<>() {
                     @Override
                     public boolean apply(@Nullable Cell cell) {
                         String columnName = Bytes.toString(CellUtil.cloneQualifier(cell));
@@ -124,7 +124,6 @@ public class HDocumentFilter extends FilterBase implements Externalizable {
         return codec.encode(this);
     }
 
-    @SuppressWarnings("unchecked")
     public static Filter parseFrom(byte[] pbBytes) throws DeserializationException {
         try {
             Codec<HDocumentFilter> codec = new Codec<>();

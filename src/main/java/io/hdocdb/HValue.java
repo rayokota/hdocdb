@@ -26,9 +26,7 @@ import org.ojai.util.Fields;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
-import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -125,13 +123,13 @@ public class HValue implements Value, Comparable<HValue> {
         }
     }
 
-    public static HDocument initFromMap(Map<String, ? extends Object> map) {
+    public static HDocument initFromMap(Map<String, ?> map) {
         if (map instanceof HDocument) {
             return ((HDocument)map).shallowCopy();
         } else {
             HDocument result = new HDocument();
 
-            for (Map.Entry<String, ? extends Object> entry : map.entrySet()) {
+            for (Map.Entry<String, ?> entry : map.entrySet()) {
                 HValue child = initFromObject(entry.getValue());
                 result.set(Fields.quoteFieldName(entry.getKey()), child);
             }
@@ -633,7 +631,7 @@ public class HValue implements Value, Comparable<HValue> {
             throw new IllegalStateException("Cannot compare composite types");
         }
         Object o = getObject();
-        if (o == null || !(o instanceof Comparable)) {
+        if (!(o instanceof Comparable)) {
             throw new IllegalStateException("Type " + getType() + " is not comparable");
         }
         return ((Comparable)o).compareTo(that.getObject());

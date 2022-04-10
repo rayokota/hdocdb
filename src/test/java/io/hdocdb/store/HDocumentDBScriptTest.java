@@ -8,15 +8,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ojai.Document;
 
-import javax.script.Bindings;
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Objects;
-import java.util.function.Predicate;
 
 public class HDocumentDBScriptTest {
 

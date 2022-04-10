@@ -102,7 +102,6 @@ public class InclusiveStopPrefixFilter extends FilterBase implements Externaliza
      * @throws DeserializationException
      * @see #toByteArray
      */
-    @SuppressWarnings("unchecked")
     public static InclusiveStopPrefixFilter parseFrom(final byte[] pbBytes) throws DeserializationException {
         try {
             Codec<InclusiveStopPrefixFilter> codec = new Codec<>();

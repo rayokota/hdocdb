@@ -29,12 +29,12 @@ public class HList extends HContainer implements List<Object> {
     }
 
     public boolean contains(Object o) {
-        return elements.values().contains(HValue.initFromObject(o));
+        return elements.containsValue(HValue.initFromObject(o));
     }
 
     public Iterator<Object> iterator() {
         final Iterator<HValue> itr = elements.values().iterator();
-        return new Iterator<Object>() {
+        return new Iterator<>() {
             public void remove() {
                 throw new UnsupportedOperationException();
             }
@@ -82,7 +82,7 @@ public class HList extends HContainer implements List<Object> {
             }
 
             o = itr.next();
-        } while (this.elements.values().contains(HValue.initFromObject(o)));
+        } while (this.elements.containsValue(HValue.initFromObject(o)));
 
         return false;
     }
@@ -200,7 +200,7 @@ public class HList extends HContainer implements List<Object> {
                 sb.append(", ");
             }
             if (value != null) {
-                sb.append(value.toString());
+                sb.append(value);
             } else {
                 sb.append("null");
             }

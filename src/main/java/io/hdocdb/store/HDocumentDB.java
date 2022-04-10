@@ -23,7 +23,6 @@ import org.ojai.store.exceptions.StoreException;
 
 import java.io.IOException;
 import java.util.AbstractMap;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,7 +66,7 @@ public class HDocumentDB extends AbstractMap<String, HDocumentCollection> {
         this.indexes = CacheBuilder.newBuilder()
                 .refreshAfterWrite(INDEX_CACHE_REFRESH_SECS, TimeUnit.SECONDS)
                 .ticker(ticker)
-                .build(new CacheLoader<TableName, Map<String, Index>>() {
+                .build(new CacheLoader<>() {
                     @Override
                     public Map<String, Index> load(TableName key) throws Exception {
                         return convertIndexDocument(indexCollection.findById(key.toString()));

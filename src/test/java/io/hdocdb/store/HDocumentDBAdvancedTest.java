@@ -38,7 +38,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
     }
 
     @Test
-    public void testDBDocumentWriterCRUD() throws IOException, Exception {
+    public void testDBDocumentWriterCRUD() throws Exception {
         HDocumentCollection coll;
         coll = getTempDocumentCollection();
         DocumentBuilder writer = this.createAndPrepareWriter();
@@ -52,18 +52,18 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         Document newRec = coll.findById(new HValue("key1"));
         Assert.assertEquals("a string", newRec.getString("a.x"));
         Assert.assertEquals(999111666L, newRec.getLong("long"));
-        Assert.assertEquals(true, newRec.getBoolean("map.bool"));
+        Assert.assertTrue(newRec.getBoolean("map.bool"));
 
         newRec = coll.findById(new HValue("key2"));
-        Assert.assertEquals(1234L, (long) newRec.getInt("map.array[2]"));
+        Assert.assertEquals(1234L, newRec.getInt("map.array[2]"));
         Assert.assertEquals(OTimestamp.parse("2013-10-15T14:20:25.111-07:00"), newRec.getTimestamp("map.array[0]"));
-        Assert.assertEquals(256L, (long) newRec.getShort("map.array[3].val2"));
+        Assert.assertEquals(256L, newRec.getShort("map.array[3].val2"));
         Assert.assertEquals(OTime.parse("07:30:35.999"), newRec.getTime("map.array[3].list[0]"));
-        Assert.assertEquals(144.21D, (double) newRec.getFloat("record.inner.val1"), 1.0E-5D);
+        Assert.assertEquals(144.21D, newRec.getFloat("record.inner.val1"), 1.0E-5D);
         coll.delete(new HValue("key2"));
         newRec = coll.findById(new HValue("key3"));
         Assert.assertEquals(333456700L, newRec.getLong("p.q"));
-        Assert.assertEquals(111L, (long) newRec.getByte("map.array[1]"));
+        Assert.assertEquals(111L, newRec.getByte("map.array[1]"));
         newRec = coll.findById(new HValue("key2"));
         DocumentStream stream = coll.find();
         Iterator<Document> iter = stream.iterator();
@@ -73,7 +73,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
             iter.next();
         }
 
-        Assert.assertEquals(2L, (long) count);
+        Assert.assertEquals(2L, count);
         closeDocumentCollection(coll);
     }
 
@@ -90,7 +90,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         rec.set("_id", "k2");
         coll.insertOrReplace(rec);
         Document newRec = coll.findById(new HValue("k1"));
-        Assert.assertEquals(true, newRec.getBoolean("bool"));
+        Assert.assertTrue(newRec.getBoolean("bool"));
         newRec = coll.findById(new HValue("k2"));
         Assert.assertEquals(new HValue("k2"), newRec.getValue("_id"));
         closeDocumentCollection(coll);
@@ -101,12 +101,12 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         Document r = getRecord();
         mainColl.insertOrReplace(new HValue("RecordMutKey"), r);
         Document var6 = mainColl.findById(new HValue("RecordMutKey"));
-        Assert.assertEquals((long) var6.getInt("Scores[1]"), 20L);
+        Assert.assertEquals(var6.getInt("Scores[1]"), 20L);
         Assert.assertEquals(var6.getString("Friends[0]"), "Anurag");
-        Assert.assertEquals((long) var6.getByte("map.byte"), 100L);
-        Assert.assertEquals((long) var6.getShort("map.short"), 10000L);
+        Assert.assertEquals(var6.getByte("map.byte"), 100L);
+        Assert.assertEquals(var6.getShort("map.short"), 10000L);
         Assert.assertEquals(var6.getLong("map.long"), 12345678999L);
-        Assert.assertEquals((long) var6.getInt("map.LIST2[3][2]"), 1500L);
+        Assert.assertEquals(var6.getInt("map.LIST2[3][2]"), 1500L);
         ByteBuffer buf = ByteBuffer.allocate(5000);
 
         for (int mutation = 0; mutation < 5000; ++mutation) {
@@ -133,29 +133,29 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         mainColl.update(new HValue("RecordMutKey"), var7);
         mainColl.flush();
         var6 = mainColl.findById(new HValue("RecordMutKey"));
-        Assert.assertEquals((long) var6.getInt("Scores[1]"), 23L);
+        Assert.assertEquals(var6.getInt("Scores[1]"), 23L);
         Assert.assertEquals(var6.getString("Friends[0]"), "Anurag Choudhary");
-        Assert.assertEquals((long) var6.getByte("map.byte"), 105L);
-        Assert.assertEquals((long) var6.getShort("map.short"), 30000L);
-        Assert.assertEquals(var6.getValue("map.int"), (Object) null);
-        Assert.assertEquals(var6.getValue("map.long"), (Object) null);
+        Assert.assertEquals(var6.getByte("map.byte"), 105L);
+        Assert.assertEquals(var6.getShort("map.short"), 30000L);
+        Assert.assertEquals(var6.getValue("map.int"), null);
+        Assert.assertEquals(var6.getValue("map.long"), null);
         Assert.assertEquals(var6.getString("map.newfield"), "THIS IS NEW");
-        Assert.assertEquals((long) var6.getInt("map.LIST2[3][2]"), 1620L);
-        Assert.assertEquals(30L, (long) var6.getByte("NewField.field1.bytefield"));
-        Assert.assertEquals(12345L, (long) var6.getShort("NewField.field1.shortfield"));
-        Assert.assertEquals(567890123L, (long) var6.getInt("NewField.field1.intfield"));
+        Assert.assertEquals(var6.getInt("map.LIST2[3][2]"), 1620L);
+        Assert.assertEquals(30L, var6.getByte("NewField.field1.bytefield"));
+        Assert.assertEquals(12345L, var6.getShort("NewField.field1.shortfield"));
+        Assert.assertEquals(567890123L, var6.getInt("NewField.field1.intfield"));
         Assert.assertEquals(7777777777777777L, var6.getLong("NewField.field1.longfield"));
-        Assert.assertEquals(10.12345027923584D, (double) var6.getFloat("NewField.field1.floatfield"), 0.0D);
+        Assert.assertEquals(10.12345027923584D, var6.getFloat("NewField.field1.floatfield"), 0.0D);
         Assert.assertEquals(111111.111111D, var6.getDouble("NewField.field1.doublefield"), 0.0D);
         ByteBuffer b = var6.getBinary("binary3");
 
         int i;
         for (i = 0; i < 100; ++i) {
-            Assert.assertEquals((long) b.get(i), (long) ((byte) i));
+            Assert.assertEquals(b.get(i), (byte) i);
         }
 
         for (i = 100; i < 5000; ++i) {
-            Assert.assertEquals((long) b.get(i), 55L);
+            Assert.assertEquals(b.get(i), 55L);
         }
     }
 
@@ -203,9 +203,9 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         r.set("field1.field2[0]", 50).set("field1.field2[1]", 100).set("field1.field2[2]", 150);
         coll.insertOrReplace(key, r);
         r = coll.findById(new HValue("key"));
-        Assert.assertEquals((long) r.getInt("field1.field2[0]"), 50L);
-        Assert.assertEquals((long) r.getInt("field1.field2[1]"), 100L);
-        Assert.assertEquals((long) r.getInt("field1.field2[2]"), 150L);
+        Assert.assertEquals(r.getInt("field1.field2[0]"), 50L);
+        Assert.assertEquals(r.getInt("field1.field2[1]"), 100L);
+        Assert.assertEquals(r.getInt("field1.field2[2]"), 150L);
         DocumentMutation mutation = new HDocumentMutation();
         mutation.setOrReplace("field1.field2", 32);
 
@@ -237,9 +237,9 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         r.set("field1.field2[0]", 50).set("field1.field2[1]", 100).set("field1.field2[2]", 150);
         mainColl.insertOrReplace(key, r);
         r = mainColl.findById(new HValue("key"));
-        Assert.assertEquals((long) r.getInt("field1.field2[0]"), 50L);
-        Assert.assertEquals((long) r.getInt("field1.field2[1]"), 100L);
-        Assert.assertEquals((long) r.getInt("field1.field2[2]"), 150L);
+        Assert.assertEquals(r.getInt("field1.field2[0]"), 50L);
+        Assert.assertEquals(r.getInt("field1.field2[1]"), 100L);
+        Assert.assertEquals(r.getInt("field1.field2[2]"), 150L);
         DocumentMutation mutation = new HDocumentMutation();
         mutation.increment("field1.field2", 3.2D);
         boolean opFailed = false;
@@ -312,11 +312,11 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         mainColl.update(key, mutation);
         mainColl.flush();
         r = mainColl.findById(key);
-        Assert.assertEquals((long) r.getByte("byte"), (long) ((byte) ((int) (100L + inc))));
-        Assert.assertEquals((long) r.getShort("short"), (long) ((short) ((int) (12345L + inc))));
-        Assert.assertEquals((long) r.getInt("int"), (long) ((int) (12345678L + inc)));
+        Assert.assertEquals(r.getByte("byte"), (byte) ((int) (100L + inc)));
+        Assert.assertEquals(r.getShort("short"), (short) ((int) (12345L + inc)));
+        Assert.assertEquals(r.getInt("int"), (int) (12345678L + inc));
         Assert.assertEquals(r.getLong("long"), v + inc);
-        Assert.assertEquals((double) r.getFloat("float"), (double) (12345.123F + (float) inc), 0.0D);
+        Assert.assertEquals(r.getFloat("float"), 12345.123F + (float) inc, 0.0D);
         Assert.assertEquals(r.getDouble("double"), 1.111111111111111E8D + (double) inc, 0.0D);
     }
 
@@ -334,20 +334,20 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         mainColl.insertOrReplace(key, r);
         r = mainColl.findById(key);
         Assert.assertEquals("Hello ", r.getString("string"));
-        Assert.assertEquals(10L, (long) r.getInt("array[0]"));
-        Assert.assertEquals(20L, (long) r.getInt("array[1]"));
-        Assert.assertEquals(30L, (long) r.getInt("array[2]"));
-        Assert.assertEquals(40L, (long) r.getInt("array[3]"));
-        Assert.assertEquals(10L, (long) r.getInt("array2[0]"));
-        Assert.assertEquals(20L, (long) r.getInt("array2[1]"));
-        Assert.assertEquals(30L, (long) r.getInt("array2[2]"));
-        Assert.assertEquals(40L, (long) r.getInt("array2[3]"));
+        Assert.assertEquals(10L, r.getInt("array[0]"));
+        Assert.assertEquals(20L, r.getInt("array[1]"));
+        Assert.assertEquals(30L, r.getInt("array[2]"));
+        Assert.assertEquals(40L, r.getInt("array[3]"));
+        Assert.assertEquals(10L, r.getInt("array2[0]"));
+        Assert.assertEquals(20L, r.getInt("array2[1]"));
+        Assert.assertEquals(30L, r.getInt("array2[2]"));
+        Assert.assertEquals(40L, r.getInt("array2[3]"));
         Assert.assertEquals(50.505D, r.getDouble("double1"), 0.0D);
         Assert.assertEquals(50000.505D, r.getDouble("double2"), 0.0D);
         ByteBuffer bread = r.getBinary("bytes");
 
         for (int mutation = 0; mutation < 100; ++mutation) {
-            Assert.assertEquals((long) ((byte) mutation), (long) bread.get());
+            Assert.assertEquals((byte) mutation, bread.get());
         }
 
         DocumentMutation mutation = new HDocumentMutation();
@@ -361,10 +361,10 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         Value val2 = r.getValue("double1");
         mutation.append("bytes", newBytes)
                 .append("string", "world")
-                .append("array", Arrays.asList(new Object[]{"W1", "W2", Integer.valueOf(500)}))
+                .append("array", Arrays.asList(new Object[]{"W1", "W2", 500}))
                 .append("newpath.bytes", newBytes)
                 .append("newpath.string", "hello world")
-                .append("newpath.array", Arrays.asList(new Object[]{"W1", "W2", Integer.valueOf(500)}))
+                .append("newpath.array", Arrays.asList(new Object[]{"W1", "W2", 500}))
                 .setOrReplace("newpath2.string", var12)
                 .set("double2", val2)
                 .setOrReplace("array2[1]", "NEW ARRAY ELEMENT")
@@ -373,32 +373,32 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         mainColl.flush();
         r = mainColl.findById(key);
         Assert.assertEquals("Hello world", r.getString("string"));
-        Assert.assertEquals(10L, (long) r.getInt("array[0]"));
-        Assert.assertEquals(20L, (long) r.getInt("array[1]"));
-        Assert.assertEquals(30L, (long) r.getInt("array[2]"));
-        Assert.assertEquals(40L, (long) r.getInt("array[3]"));
+        Assert.assertEquals(10L, r.getInt("array[0]"));
+        Assert.assertEquals(20L, r.getInt("array[1]"));
+        Assert.assertEquals(30L, r.getInt("array[2]"));
+        Assert.assertEquals(40L, r.getInt("array[3]"));
         Assert.assertEquals("W1", r.getString("array[4]"));
         Assert.assertEquals("W2", r.getString("array[5]"));
-        Assert.assertEquals(500L, (long) r.getInt("array[6]"));
-        Assert.assertEquals(10L, (long) r.getInt("array2[0]"));
+        Assert.assertEquals(500L, r.getInt("array[6]"));
+        Assert.assertEquals(10L, r.getInt("array2[0]"));
         Assert.assertEquals("NEW ARRAY ELEMENT", r.getString("array2[1]"));
         Assert.assertEquals(5000.0D, r.getDouble("array2[2]"), 0.0D);
-        Assert.assertEquals(40L, (long) r.getInt("array[3]"));
+        Assert.assertEquals(40L, r.getInt("array[3]"));
         bread = r.getBinary("bytes");
 
         int i;
         for (i = 0; i < 100; ++i) {
-            Assert.assertEquals((long) ((byte) i), (long) bread.get());
+            Assert.assertEquals((byte) i, bread.get());
         }
 
         for (i = 0; i < 50; ++i) {
-            Assert.assertEquals(-52L, (long) bread.get());
+            Assert.assertEquals(-52L, bread.get());
         }
 
         bread = r.getBinary("newpath.bytes");
 
         for (i = 0; i < 50; ++i) {
-            Assert.assertEquals(-52L, (long) bread.get());
+            Assert.assertEquals(-52L, bread.get());
         }
 
         Assert.assertEquals("hello world", r.getString("newpath.string"));
@@ -407,8 +407,8 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         Assert.assertEquals(50.505D, r.getDouble("double2"), 0.0D);
         Assert.assertEquals("W1", r.getString("newpath.array[0]"));
         Assert.assertEquals("W2", r.getString("newpath.array[1]"));
-        Assert.assertEquals(500L, (long) r.getInt("newpath.array[2]"));
-        Assert.assertEquals(500L, (long) r.getInt("newpath.array[2]"));
+        Assert.assertEquals(500L, r.getInt("newpath.array[2]"));
+        Assert.assertEquals(500L, r.getInt("newpath.array[2]"));
     }
 
     @Test
@@ -435,12 +435,12 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         Document r = getRecord();
         mainColl.insertOrReplace(new HValue("CheckAndMutateKey"), r);
         Document doc = mainColl.findById(new HValue("CheckAndMutateKey"));
-        Assert.assertEquals((long) doc.getInt("Scores[1]"), 20L);
+        Assert.assertEquals(doc.getInt("Scores[1]"), 20L);
         Assert.assertEquals(doc.getString("Friends[0]"), "Anurag");
-        Assert.assertEquals((long) doc.getByte("map.byte"), 100L);
-        Assert.assertEquals((long) doc.getShort("map.short"), 10000L);
+        Assert.assertEquals(doc.getByte("map.byte"), 100L);
+        Assert.assertEquals(doc.getShort("map.short"), 10000L);
         Assert.assertEquals(doc.getLong("map.long"), 12345678999L);
-        Assert.assertEquals((long) doc.getInt("map.LIST2[3][2]"), 1500L);
+        Assert.assertEquals(doc.getInt("map.LIST2[3][2]"), 1500L);
         ByteBuffer buf = ByteBuffer.allocate(5000);
 
         for (int mutation = 0; mutation < 5000; ++mutation) {
@@ -455,34 +455,34 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         boolean conditionSuccess = mainColl.checkAndMutate(new HValue("CheckAndMutateKey"), c, mutation);
         Assert.assertFalse(conditionSuccess);
         doc = mainColl.findById(new HValue("CheckAndMutateKey"));
-        Assert.assertEquals((long) doc.getInt("Scores[1]"), 20L);
+        Assert.assertEquals(doc.getInt("Scores[1]"), 20L);
         Assert.assertEquals(doc.getString("Friends[0]"), "Anurag");
-        Assert.assertEquals((long) doc.getByte("map.byte"), 100L);
-        Assert.assertEquals((long) doc.getShort("map.short"), 10000L);
+        Assert.assertEquals(doc.getByte("map.byte"), 100L);
+        Assert.assertEquals(doc.getShort("map.short"), 10000L);
         Assert.assertEquals(doc.getLong("map.long"), 12345678999L);
-        Assert.assertEquals((long) doc.getInt("map.LIST2[3][2]"), 1500L);
+        Assert.assertEquals(doc.getInt("map.LIST2[3][2]"), 1500L);
         c = new HQueryCondition();
         c.and().is("Friends[0]", QueryCondition.Op.EQUAL, "Anurag").is("map.long", QueryCondition.Op.GREATER, 5L).close().build();
         conditionSuccess = mainColl.checkAndMutate(new HValue("CheckAndMutateKey"), c, mutation);
         Assert.assertTrue(conditionSuccess);
         doc = mainColl.findById(new HValue("CheckAndMutateKey"));
-        Assert.assertEquals((long) doc.getInt("Scores[1]"), 23L);
+        Assert.assertEquals(doc.getInt("Scores[1]"), 23L);
         Assert.assertEquals(doc.getString("Friends[0]"), "Anurag Choudhary");
-        Assert.assertEquals((long) doc.getByte("map.byte"), 105L);
-        Assert.assertEquals((long) doc.getShort("map.short"), 30000L);
-        Assert.assertEquals(doc.getValue("map.int"), (Object) null);
-        Assert.assertEquals(doc.getValue("map.long"), (Object) null);
+        Assert.assertEquals(doc.getByte("map.byte"), 105L);
+        Assert.assertEquals(doc.getShort("map.short"), 30000L);
+        Assert.assertEquals(doc.getValue("map.int"), null);
+        Assert.assertEquals(doc.getValue("map.long"), null);
         Assert.assertEquals(doc.getString("map.newfield"), "THIS IS NEW");
-        Assert.assertEquals((long) doc.getInt("map.LIST2[3][2]"), 1620L);
+        Assert.assertEquals(doc.getInt("map.LIST2[3][2]"), 1620L);
         ByteBuffer b = doc.getBinary("binary3");
 
         int i;
         for (i = 0; i < 100; ++i) {
-            Assert.assertEquals((long) b.get(i), (long) ((byte) i));
+            Assert.assertEquals(b.get(i), (byte) i);
         }
 
         for (i = 100; i < 5000; ++i) {
-            Assert.assertEquals((long) b.get(i), 55L);
+            Assert.assertEquals(b.get(i), 55L);
         }
 
         mutation = new HDocumentMutation();
@@ -492,21 +492,21 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         conditionSuccess = mainColl.checkAndMutate(new HValue("CheckAndMutateKey"), c, mutation);
         Assert.assertTrue(conditionSuccess);
         doc = mainColl.findById(new HValue("CheckAndMutateKey"));
-        Assert.assertEquals((long) doc.getInt("Scores[1]"), 26L);
+        Assert.assertEquals(doc.getInt("Scores[1]"), 26L);
         Assert.assertEquals(doc.getString("Friends[0]"), "Bharat");
-        Assert.assertEquals((long) doc.getShort("map.short"), 30000L);
-        Assert.assertEquals(doc.getValue("map.int"), (Object) null);
-        Assert.assertEquals(doc.getValue("map.long"), (Object) null);
+        Assert.assertEquals(doc.getShort("map.short"), 30000L);
+        Assert.assertEquals(doc.getValue("map.int"), null);
+        Assert.assertEquals(doc.getValue("map.long"), null);
         Assert.assertEquals(doc.getString("map.newfield"), "THIS IS NEW");
-        Assert.assertEquals((long) doc.getInt("map.LIST2[3][2]"), 1620L);
+        Assert.assertEquals(doc.getInt("map.LIST2[3][2]"), 1620L);
         b = doc.getBinary("binary3");
 
         for (i = 0; i < 100; ++i) {
-            Assert.assertEquals((long) b.get(i), (long) ((byte) i));
+            Assert.assertEquals(b.get(i), (byte) i);
         }
 
         for (i = 100; i < 5000; ++i) {
-            Assert.assertEquals((long) b.get(i), 55L);
+            Assert.assertEquals(b.get(i), 55L);
         }
 
     }
@@ -516,12 +516,12 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         Document r = getRecord();
         mainColl.insertOrReplace(new HValue("CheckAndDeleteKey"), r);
         Document doc = mainColl.findById(new HValue("CheckAndDeleteKey"));
-        Assert.assertEquals((long) doc.getInt("Scores[1]"), 20L);
+        Assert.assertEquals(doc.getInt("Scores[1]"), 20L);
         Assert.assertEquals(doc.getString("Friends[0]"), "Anurag");
-        Assert.assertEquals((long) doc.getByte("map.byte"), 100L);
-        Assert.assertEquals((long) doc.getShort("map.short"), 10000L);
+        Assert.assertEquals(doc.getByte("map.byte"), 100L);
+        Assert.assertEquals(doc.getShort("map.short"), 10000L);
         Assert.assertEquals(doc.getLong("map.long"), 12345678999L);
-        Assert.assertEquals((long) doc.getInt("map.LIST2[3][2]"), 1500L);
+        Assert.assertEquals(doc.getInt("map.LIST2[3][2]"), 1500L);
         ByteBuffer buf = ByteBuffer.allocate(5000);
 
         for (int c = 0; c < 5000; ++c) {
@@ -533,18 +533,18 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         boolean conditionSuccess = mainColl.checkAndDelete(new HValue("CheckAndDeleteKey"), condition);
         Assert.assertFalse(conditionSuccess);
         doc = mainColl.findById(new HValue("CheckAndDeleteKey"));
-        Assert.assertEquals((long) doc.getInt("Scores[1]"), 20L);
+        Assert.assertEquals(doc.getInt("Scores[1]"), 20L);
         Assert.assertEquals(doc.getString("Friends[0]"), "Anurag");
-        Assert.assertEquals((long) doc.getByte("map.byte"), 100L);
-        Assert.assertEquals((long) doc.getShort("map.short"), 10000L);
+        Assert.assertEquals(doc.getByte("map.byte"), 100L);
+        Assert.assertEquals(doc.getShort("map.short"), 10000L);
         Assert.assertEquals(doc.getLong("map.long"), 12345678999L);
-        Assert.assertEquals((long) doc.getInt("map.LIST2[3][2]"), 1500L);
+        Assert.assertEquals(doc.getInt("map.LIST2[3][2]"), 1500L);
         condition = new HQueryCondition();
         condition.and().is("Friends[0]", QueryCondition.Op.EQUAL, "Anurag").is("map.long", QueryCondition.Op.GREATER, 5L).close().build();
         conditionSuccess = mainColl.checkAndDelete(new HValue("CheckAndDeleteKey"), condition);
         Assert.assertTrue(conditionSuccess);
         doc = mainColl.findById(new HValue("CheckAndDeleteKey"));
-        Assert.assertEquals(doc, (Object) null);
+        Assert.assertEquals(doc, null);
     }
 
     @Test
@@ -592,7 +592,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         Document record2 = new HDocument().set("c", "d");
         coll.replace(new HValue("record1"), record2);
         doc = coll.findById(new HValue("record1"));
-        Assert.assertEquals(doc.getString("a"), null);
+        Assert.assertNull(doc.getString("a"));
         closeDocumentCollection(coll);
     }
 
@@ -606,16 +606,16 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         boolean conditionSuccess = mainColl.checkAndReplace(new HValue("CheckAndReplaceKey"), c, r);
         Assert.assertTrue(conditionSuccess);
         r = mainColl.findById(new HValue("CheckAndReplaceKey"));
-        Assert.assertEquals((long) r.getInt("array[1]"), 4L);
+        Assert.assertEquals(r.getInt("array[1]"), 4L);
         Document doc = getRecord();
         mainColl.insertOrReplace(new HValue("CheckAndReplaceKey"), doc);
         r = mainColl.findById(new HValue("CheckAndReplaceKey"));
-        Assert.assertEquals((long) r.getInt("Scores[1]"), 20L);
+        Assert.assertEquals(r.getInt("Scores[1]"), 20L);
         Assert.assertEquals(r.getString("Friends[0]"), "Anurag");
-        Assert.assertEquals((long) r.getByte("map.byte"), 100L);
-        Assert.assertEquals((long) r.getShort("map.short"), 10000L);
+        Assert.assertEquals(r.getByte("map.byte"), 100L);
+        Assert.assertEquals(r.getShort("map.short"), 10000L);
         Assert.assertEquals(r.getLong("map.long"), 12345678999L);
-        Assert.assertEquals((long) r.getInt("map.LIST2[3][2]"), 1500L);
+        Assert.assertEquals(r.getInt("map.LIST2[3][2]"), 1500L);
         ByteBuffer buf = ByteBuffer.allocate(5000);
 
         for (int newRecord = 0; newRecord < 5000; ++newRecord) {
@@ -629,12 +629,12 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         conditionSuccess = mainColl.checkAndReplace(new HValue("CheckAndReplaceKey"), c, doc2);
         Assert.assertFalse(conditionSuccess);
         r = mainColl.findById(new HValue("CheckAndReplaceKey"));
-        Assert.assertEquals((long) r.getInt("Scores[1]"), 20L);
+        Assert.assertEquals(r.getInt("Scores[1]"), 20L);
         Assert.assertEquals(r.getString("Friends[0]"), "Anurag");
-        Assert.assertEquals((long) r.getByte("map.byte"), 100L);
-        Assert.assertEquals((long) r.getShort("map.short"), 10000L);
+        Assert.assertEquals(r.getByte("map.byte"), 100L);
+        Assert.assertEquals(r.getShort("map.short"), 10000L);
         Assert.assertEquals(r.getLong("map.long"), 12345678999L);
-        Assert.assertEquals((long) r.getInt("map.LIST2[3][2]"), 1500L);
+        Assert.assertEquals(r.getInt("map.LIST2[3][2]"), 1500L);
         c = new HQueryCondition();
         c.and().is("Friends[0]", QueryCondition.Op.EQUAL, "Anurag").is("map.long", QueryCondition.Op.GREATER, 5L).close().build();
         conditionSuccess = mainColl.checkAndReplace(new HValue("CheckAndReplaceKey"), c, doc2);
@@ -645,7 +645,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
     }
 
     @Test
-    public void testCheckAndReplaceMCF() throws IOException, Exception {
+    public void testCheckAndReplaceMCF() throws Exception {
         HDocumentCollection coll;
         coll = getTempDocumentCollection();
         String field1 = "x.y.z";
@@ -678,10 +678,8 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         Assert.assertEquals("a.b.x", r.getString("a.b.x"));
         Assert.assertEquals("aaa", r.getString("a.x"));
         DocumentStream r2 = coll.find();
-        Iterator<Document> iter = r2.iterator();
 
-        while (iter.hasNext()) {
-            Document r1 = iter.next();
+        for (Document r1 : r2) {
             Assert.assertEquals("a.b.c.x", r1.getString("a.b.c.x"));
             Assert.assertEquals("a.b.x", r1.getString("a.b.x"));
             Assert.assertEquals("aaa", r1.getString("a.x"));
@@ -691,14 +689,14 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
     }
 
     @Test
-    public void testArrayDeletes() throws IOException, Exception {
+    public void testArrayDeletes() throws Exception {
         HDocumentCollection coll;
         coll = getTempDocumentCollection();
         Document record = new HDocument();
         ArrayList<Object> o1 = new ArrayList<>();
-        o1.add(Integer.valueOf(1));
+        o1.add(1);
         o1.add("2");
-        o1.add(Integer.valueOf(3));
+        o1.add(3);
         ArrayList<Object> o2 = new ArrayList<>();
         o2.add("A");
         o2.add("B");
@@ -717,7 +715,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
     }
 
     @Test
-    public void testMultiCF() throws IOException, Exception {
+    public void testMultiCF() throws Exception {
         HDocumentCollection coll;
         coll = getTempDocumentCollection();
         Document putRec = null;
@@ -773,11 +771,11 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         coll.insertOrReplace(new HValue("MultiCF"), putRec);
         readRecordi = coll.findById(new HValue("MultiCF"));
         Assert.assertNotNull(readRecordi);
-        Assert.assertEquals(true, readRecordi.getBoolean("bool"));
-        Assert.assertEquals(true, readRecordi.getBoolean("l1.bool"));
-        Assert.assertEquals(false, readRecordi.getBoolean("l1.l2.bool"));
-        Assert.assertEquals(true, readRecordi.getBoolean("l1.l2.l3.bool"));
-        Assert.assertEquals(false, readRecordi.getBoolean("l1.l2.l3.l4.bool"));
+        Assert.assertTrue(readRecordi.getBoolean("bool"));
+        Assert.assertTrue(readRecordi.getBoolean("l1.bool"));
+        Assert.assertFalse(readRecordi.getBoolean("l1.l2.bool"));
+        Assert.assertTrue(readRecordi.getBoolean("l1.l2.l3.bool"));
+        Assert.assertFalse(readRecordi.getBoolean("l1.l2.l3.l4.bool"));
         putRec = (new HDocument()).set("a.b.c", "abc");
         coll.insertOrReplace(new HValue("MultiCF"), putRec);
         m = new HDocumentMutation().set("a.b.c", "cba");
@@ -817,13 +815,13 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
 
         int count;
         for (count = 0; itrs.hasNext(); ++count) {
-            readRecordi = (Document) itrs.next();
+            readRecordi = itrs.next();
             Assert.assertEquals("pq", readRecordi.getString("p.q"));
             Assert.assertEquals("mn", readRecordi.getString("m.n"));
             Assert.assertEquals("abc", readRecordi.getString("a.b.c"));
         }
 
-        Assert.assertEquals(1L, (long) count);
+        Assert.assertEquals(1L, count);
         cfPath.clear();
         cfPath = new HashMap<>();
         cfPath.put("f1", "a.b");
@@ -853,8 +851,8 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         coll.update(new HValue("MultiCF"), m);
         readRecordi = coll.findById(new HValue("MultiCF"), new String[]{"a.b.c", "a.b.x"});
         Assert.assertNotNull(readRecordi);
-        Assert.assertEquals(1111L, (long) readRecordi.getShort("a.b.c"));
-        Assert.assertEquals(222L, (long) readRecordi.getShort("a.b.x"));
+        Assert.assertEquals(1111L, readRecordi.getShort("a.b.c"));
+        Assert.assertEquals(222L, readRecordi.getShort("a.b.x"));
         cfPath = new HashMap<>();
         cfPath.put("f1", "p.q");
         cfPath.put("f2", "d.e");
@@ -866,14 +864,14 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         coll.insertOrReplace(new HValue("MultiCF"), putRec);
         readRecordi = coll.findById(new HValue("MultiCF"), new String[]{"p.q", "a.b"});
         Assert.assertNotNull(readRecordi);
-        Assert.assertEquals(22L, (long) readRecordi.getShort("a.b.x"));
-        Assert.assertEquals(44L, (long) readRecordi.getShort("p.q"));
+        Assert.assertEquals(22L, readRecordi.getShort("a.b.x"));
+        Assert.assertEquals(44L, readRecordi.getShort("p.q"));
         m = new HDocumentMutation().increment("a.b.c", (short) 11).increment("a.b.x", (short) 22).increment("p.q", (short) 44);
         coll.update(new HValue("MultiCF"), m);
         readRecordi = coll.findById(new HValue("MultiCF"), new String[]{"a.b.c", "a.b.x", "a.m"});
         Assert.assertNotNull(readRecordi);
-        Assert.assertEquals(22L, (long) readRecordi.getShort("a.b.c"));
-        Assert.assertEquals(44L, (long) readRecordi.getShort("a.b.x"));
+        Assert.assertEquals(22L, readRecordi.getShort("a.b.c"));
+        Assert.assertEquals(44L, readRecordi.getShort("a.b.x"));
 
         coll = getTempDocumentCollection();
         putRec = (new HDocument()).set("a.b", (short) 11).set("p.q", (short) -32203);
@@ -881,7 +879,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         readRecordi = coll.findById(new HValue("MultiCF"), new String[]{"a.b.c", "a.b"});
         Assert.assertNotNull(readRecordi);
         Assert.assertNull(readRecordi.getValue("a.b.c"));
-        Assert.assertEquals(11L, (long) readRecordi.getShort("a.b"));
+        Assert.assertEquals(11L, readRecordi.getShort("a.b"));
         cfPath = new HashMap<>();
         cfPath.put("f1", "p.q");
         cfPath.put("f2", "d.e");
@@ -895,22 +893,22 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         itrs = rs.iterator();
 
         for (count = 0; itrs.hasNext(); ++count) {
-            readRecordi = (Document) itrs.next();
-            Assert.assertEquals(111L, (long) readRecordi.getShort("a.b.c"));
-            Assert.assertEquals(444L, (long) readRecordi.getShort("a.b.x"));
+            readRecordi = itrs.next();
+            Assert.assertEquals(111L, readRecordi.getShort("a.b.c"));
+            Assert.assertEquals(444L, readRecordi.getShort("a.b.x"));
             Assert.assertEquals(Type.MAP, readRecordi.getValue("d").getType());
         }
 
-        Assert.assertEquals(1L, (long) count);
+        Assert.assertEquals(1L, count);
         readRecordi = coll.findById(new HValue("MultiCF"), condition, new String[]{"a.b.x", "a.b.c", "d"});
-        Assert.assertEquals(111L, (long) readRecordi.getShort("a.b.c"));
-        Assert.assertEquals(444L, (long) readRecordi.getShort("a.b.x"));
+        Assert.assertEquals(111L, readRecordi.getShort("a.b.c"));
+        Assert.assertEquals(444L, readRecordi.getShort("a.b.x"));
         Assert.assertEquals(Type.MAP, readRecordi.getValue("d").getType());
         closeDocumentCollection(coll);
     }
 
     @Test
-    public void testMultiCF2() throws IOException, Exception {
+    public void testMultiCF2() throws Exception {
         HDocumentCollection coll;
         coll = getTempDocumentCollection();
         HashMap<String, String> cfPath = new HashMap<>();
@@ -936,7 +934,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
     }
 
     @Test
-    public void testIdRemoval() throws IOException, InterruptedException, Exception {
+    public void testIdRemoval() throws Exception {
         HDocumentCollection coll = getTempDocumentCollection();
         Document putRec = new HDocument();
         coll.insertOrReplace(new HValue("key"), putRec);
@@ -975,7 +973,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         Assert.assertEquals(readRecord.getLong("map.long"), 12345678999L);
         Assert.assertEquals(readRecord.getString("Friends[0]"), "Anurag");
         Assert.assertEquals(readRecord.getString("Friends[1]"), "Bharat");
-        Assert.assertEquals((long) readRecord.getInt("Friends[2]"), 10L);
+        Assert.assertEquals(readRecord.getInt("Friends[2]"), 10L);
         Assert.assertEquals(readRecord.getLong("map.Array2[0]"), -50000L);
 
         readRecord.setId("KEY4a");
@@ -984,7 +982,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         Assert.assertEquals(readRecord.getLong("map.long"), 12345678999L);
         Assert.assertEquals(readRecord.getString("Friends[0]"), "Anurag");
         Assert.assertEquals(readRecord.getString("Friends[1]"), "Bharat");
-        Assert.assertEquals((long) readRecord.getInt("Friends[2]"), 10L);
+        Assert.assertEquals(readRecord.getInt("Friends[2]"), 10L);
         Assert.assertEquals(readRecord.getLong("map.Array2[0]"), -50000L);
         coll.delete(new HValue("KEY2a"));
         coll.delete(new HValue("KEY3a"));
@@ -1033,7 +1031,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
                 Assert.assertEquals(doc.getLong("map.long"), 12345678999L);
                 Assert.assertEquals(doc.getString("Friends[0]"), "Anurag");
                 Assert.assertEquals(doc.getString("Friends[1]"), "Bharat");
-                Assert.assertEquals((long) doc.getInt("Friends[2]"), 10L);
+                Assert.assertEquals(doc.getInt("Friends[2]"), 10L);
                 Assert.assertEquals(doc.getLong("map.Array2[0]"), -50000L);
                 //System.out.println("\t" + doc);
             }
@@ -1050,12 +1048,12 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         Document r1 = new HDocument().set("true", true).set("false", false).set("booleanarray[0]", false).set("booleanarray[1]", true).set("booleanarray[2]", true).set("booleanarray[3]", false);
         coll.insertOrReplace(new HValue("r1"), r1);
         Document r1get = coll.findById(new HValue("r1"));
-        Assert.assertEquals(true, r1get.getBoolean("true"));
-        Assert.assertEquals(false, r1get.getBoolean("false"));
-        Assert.assertEquals(false, r1get.getBoolean("booleanarray[0]"));
-        Assert.assertEquals(true, r1get.getBoolean("booleanarray[1]"));
-        Assert.assertEquals(true, r1get.getBoolean("booleanarray[2]"));
-        Assert.assertEquals(false, r1get.getBoolean("booleanarray[3]"));
+        Assert.assertTrue(r1get.getBoolean("true"));
+        Assert.assertFalse(r1get.getBoolean("false"));
+        Assert.assertFalse(r1get.getBoolean("booleanarray[0]"));
+        Assert.assertTrue(r1get.getBoolean("booleanarray[1]"));
+        Assert.assertTrue(r1get.getBoolean("booleanarray[2]"));
+        Assert.assertFalse(r1get.getBoolean("booleanarray[3]"));
         closeDocumentCollection(coll);
     }
 
@@ -1132,11 +1130,11 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         mainColl.increment(new HValue("K1"), "a.double", 100.1D);
         mainColl.flush();
         Document r = mainColl.findById(new HValue("K1"));
-        Assert.assertEquals(100L, (long) r.getByte("a.byte"));
-        Assert.assertEquals(100L, (long) r.getShort("a.short"));
-        Assert.assertEquals(100L, (long) r.getInt("a.int"));
+        Assert.assertEquals(100L, r.getByte("a.byte"));
+        Assert.assertEquals(100L, r.getShort("a.short"));
+        Assert.assertEquals(100L, r.getInt("a.int"));
         Assert.assertEquals(100L, r.getLong("a.long"));
-        Assert.assertEquals(100.0999984741211D, (double) r.getFloat("a.float"), 0.0D);
+        Assert.assertEquals(100.0999984741211D, r.getFloat("a.float"), 0.0D);
         Assert.assertEquals(100.1D, r.getDouble("a.double"), 0.0D);
     }
 
@@ -1190,7 +1188,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         mainColl.update(new HValue("nullkey1"), m);
         mainColl.flush();
         Document d = mainColl.findById(new HValue("nullkey1"));
-        Assert.assertEquals(1000L, (long) d.getInt("f2"));
+        Assert.assertEquals(1000L, d.getInt("f2"));
         Assert.assertEquals(Type.NULL, d.getValue("f3").getType());
     }
 
@@ -1205,7 +1203,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         mainColl.update(new HValue("nullkey1"), m);
         mainColl.flush();
         Document d = mainColl.findById(new HValue("nullkey1"));
-        Assert.assertEquals(1000L, (long) d.getInt("f2"));
+        Assert.assertEquals(1000L, d.getInt("f2"));
         Assert.assertEquals(Type.NULL, d.getValue("f3").getType());
     }
 
@@ -1270,7 +1268,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         innerRecord.set("val2", (short) 256);
         ArrayList<Object> l = new ArrayList<>();
         l.add(OTime.parse("07:30:35.999"));
-        l.add(new BigDecimal(4444.1928282D));
+        l.add(new BigDecimal("4444.1928282"));
         innerRecord.set("list", l);
         DocumentBuilder writer = new HDocumentBuilder();
         writer.addNewMap();
@@ -1296,7 +1294,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
     private static Document getRecord() {
         Document rec = new HDocument();
         rec.setArray("Scores", new int[]{10, 20, 30})
-                .setArray("Friends", new Object[]{"Anurag", "Bharat", new Integer(10)})
+                .setArray("Friends", new Object[]{"Anurag", "Bharat", 10})
                 .set("map.boolean", true)
                 .set("map.string", "string")
                 .set("map.byte", (byte) 100)
@@ -1305,7 +1303,7 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
                 .set("map.long", 12345678999L)
                 .set("map.float", 10.1234F)
                 .set("map.double", 10.1234567891D)
-                .setArray("map.Array2", new Object[]{new Double("-2321232.1234312"), new Long(-50000L), new Integer(10)})
+                .setArray("map.Array2", new Object[]{new Double("-2321232.1234312"), -50000L, 10})
                 .setNull("NULL");
         ByteBuffer bbuf = ByteBuffer.allocate(100);
 
@@ -1320,13 +1318,13 @@ public class HDocumentDBAdvancedTest extends HDocumentDBTest {
         rec.set("byte", (byte) 100);
         List<Object> values = new ArrayList<>();
         values.add("Field1");
-        values.add(new Integer(500));
-        values.add(new Double(5555.5555D));
+        values.add(500);
+        values.add(5555.5555D);
         rec.set("map.LIST", values);
         ArrayList<Object> var4 = new ArrayList<>();
         var4.add("Field1");
-        var4.add(new Integer(500));
-        var4.add(new Double(5555.5555D));
+        var4.add(500);
+        var4.add(5555.5555D);
         var4.add(new int[]{500, 1000, 1500, 2000});
         rec.set("map.LIST2", var4);
         rec.set("NAME", "ANURAG");

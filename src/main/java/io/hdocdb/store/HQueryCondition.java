@@ -141,7 +141,7 @@ public class HQueryCondition implements QueryCondition {
 
         HQueryCondition that = (HQueryCondition) o;
 
-        return !(!Objects.equals(root, that.root));
+        return Objects.equals(root, that.root);
     }
 
     @Override
@@ -294,7 +294,7 @@ public class HQueryCondition implements QueryCondition {
      * @param listOfValue the {@code List} of values to test against
      * @return {@code this} for chained invocation
      */
-    public HQueryCondition in(String path, List<? extends Object> listOfValue) {
+    public HQueryCondition in(String path, List<?> listOfValue) {
         return in(FieldPath.parseFrom(path), listOfValue);
     }
 
@@ -307,7 +307,7 @@ public class HQueryCondition implements QueryCondition {
      * @param listOfValue the {@code List} of values to test against
      * @return {@code this} for chained invocation
      */
-    public HQueryCondition in(FieldPath path, List<? extends Object> listOfValue) {
+    public HQueryCondition in(FieldPath path, List<?> listOfValue) {
         return add(new ConditionLeaf(path, ConditionLeaf.CompareOp.IN, HValue.initFromList(listOfValue)));
     }
 
@@ -320,7 +320,7 @@ public class HQueryCondition implements QueryCondition {
      * @param listOfValue the {@code List} of values to test against
      * @return {@code this} for chained invocation
      */
-    public HQueryCondition notIn(String path, List<? extends Object> listOfValue) {
+    public HQueryCondition notIn(String path, List<?> listOfValue) {
         return notIn(FieldPath.parseFrom(path), listOfValue);
     }
 
@@ -333,7 +333,7 @@ public class HQueryCondition implements QueryCondition {
      * @param listOfValue the {@code List} of values to test against
      * @return {@code this} for chained invocation
      */
-    public HQueryCondition notIn(FieldPath path, List<? extends Object> listOfValue) {
+    public HQueryCondition notIn(FieldPath path, List<?> listOfValue) {
         return add(new ConditionLeaf(path, ConditionLeaf.CompareOp.NOT_IN, HValue.initFromList(listOfValue)));
     }
 
@@ -985,7 +985,7 @@ public class HQueryCondition implements QueryCondition {
      * @throws TypeException if a value at any level in the specified
      *                       Map is not one of the {@code Value} types
      */
-    public HQueryCondition equals(String path, Map<String, ? extends Object> value) {
+    public HQueryCondition equals(String path, Map<String, ?> value) {
         return equals(FieldPath.parseFrom(path), value);
     }
 
@@ -1001,7 +1001,7 @@ public class HQueryCondition implements QueryCondition {
      * @throws TypeException if a value at any level in the specified
      *                       Map is not one of the {@code Value} types
      */
-    public HQueryCondition equals(FieldPath path, Map<String, ? extends Object> value) {
+    public HQueryCondition equals(FieldPath path, Map<String, ?> value) {
         return add(new ConditionLeaf(path, ConditionLeaf.CompareOp.EQ, HValue.initFromMap(value)));
     }
 
@@ -1015,7 +1015,7 @@ public class HQueryCondition implements QueryCondition {
      * @throws TypeException if a value in the specified List is not one of
      *                       the {@code Value} types
      */
-    public HQueryCondition equals(String path, List<? extends Object> value) {
+    public HQueryCondition equals(String path, List<?> value) {
         return equals(FieldPath.parseFrom(path), value);
     }
 
@@ -1029,7 +1029,7 @@ public class HQueryCondition implements QueryCondition {
      * @throws TypeException if a value in the specified List is not one of
      *                       the {@code Value} types
      */
-    public HQueryCondition equals(FieldPath path, List<? extends Object> value) {
+    public HQueryCondition equals(FieldPath path, List<?> value) {
         return add(new ConditionLeaf(path, ConditionLeaf.CompareOp.EQ, HValue.initFromList(value)));
     }
 
@@ -1045,7 +1045,7 @@ public class HQueryCondition implements QueryCondition {
      * @throws TypeException if a value at any level in the specified
      *                       Map is not one of the {@code Value} types
      */
-    public HQueryCondition notEquals(String path, Map<String, ? extends Object> value) {
+    public HQueryCondition notEquals(String path, Map<String, ?> value) {
         return notEquals(FieldPath.parseFrom(path), value);
     }
 
@@ -1061,7 +1061,7 @@ public class HQueryCondition implements QueryCondition {
      * @throws TypeException if a value at any level in the specified
      *                       Map is not one of the {@code Value} types
      */
-    public HQueryCondition notEquals(FieldPath path, Map<String, ? extends Object> value) {
+    public HQueryCondition notEquals(FieldPath path, Map<String, ?> value) {
         return add(new ConditionLeaf(path, ConditionLeaf.CompareOp.NE, HValue.initFromMap(value)));
     }
 
@@ -1075,7 +1075,7 @@ public class HQueryCondition implements QueryCondition {
      * @throws TypeException if a value in the specified List is not one of
      *                       the {@code Value} types
      */
-    public HQueryCondition notEquals(String path, List<? extends Object> value) {
+    public HQueryCondition notEquals(String path, List<?> value) {
         return notEquals(FieldPath.parseFrom(path), value);
     }
 
@@ -1089,7 +1089,7 @@ public class HQueryCondition implements QueryCondition {
      * @throws TypeException if a value in the specified List is not one of
      *                       the {@code Value} types
      */
-    public HQueryCondition notEquals(FieldPath path, List<? extends Object> value) {
+    public HQueryCondition notEquals(FieldPath path, List<?> value) {
         return add(new ConditionLeaf(path, ConditionLeaf.CompareOp.NE, HValue.initFromList(value)));
     }
 

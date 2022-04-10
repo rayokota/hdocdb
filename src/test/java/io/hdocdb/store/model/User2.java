@@ -3,10 +3,6 @@ package io.hdocdb.store.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.ojai.types.ODate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class User2 {
 

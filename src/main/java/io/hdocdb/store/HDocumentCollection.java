@@ -40,7 +40,7 @@ public class HDocumentCollection implements DocumentStore {
     private HDocumentDB db;
     private Table table;
     private Table indexTable;
-    private String family = "c";
+    private String family;
 
     protected HDocumentCollection(HDocumentDB db, Table table, Table indexTable, String family) {
         this.db = db;

@@ -13,6 +13,7 @@ import org.ojai.store.DocumentMutation;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class HDocumentDBBasicTest extends HDocumentDBTest {
 
@@ -65,7 +66,7 @@ public class HDocumentDBBasicTest extends HDocumentDBTest {
         coll.delete(newDoc);
 
         doc = coll.findById(new HValue("d1"));
-        assertEquals(null, doc);
+        assertNull(doc);
 
         closeDocumentCollection(coll);
     }

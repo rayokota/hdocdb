@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import io.hdocdb.HDocument;
 import io.hdocdb.HDocumentStream;
 import io.hdocdb.HValue;
-import io.hdocdb.compile.QueryIndexCompiler;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -396,7 +395,7 @@ public class HDocumentDBIndexTest extends HDocumentDBTest {
 
         cnt = 0;
         try (DocumentStream documentStream = coll.find(new HQueryCondition().notExists("x"))) {
-            assertEquals(((HDocumentStream)documentStream).explain().getIndexName(), null);
+            assertNull(((HDocumentStream) documentStream).explain().getIndexName());
             for (Document doc : documentStream) {
                 cnt++;
                 assertEquals(3, doc.getInt("y"));
@@ -545,7 +544,7 @@ public class HDocumentDBIndexTest extends HDocumentDBTest {
 
         cnt = 0;
         try (DocumentStream documentStream = coll.find(new HQueryCondition().exists("z"))) {
-            assertEquals(((HDocumentStream)documentStream).explain().getIndexName(), null);
+            assertNull(((HDocumentStream) documentStream).explain().getIndexName());
             for (Document doc : documentStream) {
                 cnt++;
                 //System.out.println("\t" + doc);
@@ -569,7 +568,7 @@ public class HDocumentDBIndexTest extends HDocumentDBTest {
 
         int cnt = 0;
         try (DocumentStream documentStream = coll.find(new HQueryCondition().is("a", QueryCondition.Op.EQUAL, 1), "b")) {
-            assertEquals(((HDocumentStream)documentStream).explain().getIndexName(), null);
+            assertNull(((HDocumentStream) documentStream).explain().getIndexName());
             for (Document doc : documentStream) {
                 cnt++;
                 assertNull(doc.getValue("a"));
@@ -609,7 +608,7 @@ public class HDocumentDBIndexTest extends HDocumentDBTest {
 
         int cnt = 0;
         try (DocumentStream documentStream = coll.find(new HQueryCondition().is("z.a", QueryCondition.Op.EQUAL, 17))) {
-            assertEquals(((HDocumentStream)documentStream).explain().getIndexName(), null);
+            assertNull(((HDocumentStream) documentStream).explain().getIndexName());
             for (Document doc : documentStream) {
                 cnt++;
                 assertEquals(17, doc.getMap("z").get("a"));
@@ -649,7 +648,7 @@ public class HDocumentDBIndexTest extends HDocumentDBTest {
         int cnt = 0;
         long start = System.currentTimeMillis();
         try (DocumentStream documentStream = coll.find(new HQueryCondition().is("a", QueryCondition.Op.EQUAL, 99))) {
-            assertEquals(((HDocumentStream)documentStream).explain().getIndexName(), null);
+            assertNull(((HDocumentStream) documentStream).explain().getIndexName());
             for (Document doc : documentStream) {
                 cnt++;
                 assertEquals(99, doc.getInt("a"));

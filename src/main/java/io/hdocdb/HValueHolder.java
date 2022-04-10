@@ -36,7 +36,7 @@ public class HValueHolder implements Externalizable {
 
         HValueHolder that = (HValueHolder) o;
 
-        return !(!Objects.equals(value, that.value));
+        return Objects.equals(value, that.value);
 
     }
 

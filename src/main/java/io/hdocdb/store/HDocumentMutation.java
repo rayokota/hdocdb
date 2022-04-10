@@ -684,7 +684,7 @@ public class HDocumentMutation implements DocumentMutation {
      * @param list The new value to set at the FieldPath
      * @return {@code this} for chained invocation
      */
-    public HDocumentMutation set(String path, List<? extends Object> list) {
+    public HDocumentMutation set(String path, List<?> list) {
         return set(FieldPath.parseFrom(path), list);
     }
 
@@ -695,7 +695,7 @@ public class HDocumentMutation implements DocumentMutation {
      * @param list The new value to set at the FieldPath
      * @return {@code this} for chained invocation
      */
-    public HDocumentMutation set(FieldPath path, List<? extends Object> list) {
+    public HDocumentMutation set(FieldPath path, List<?> list) {
         MutationOp op = new MutationOp();
         op.setType(MutationOp.Type.SET);
         op.setFieldPath(path);
@@ -712,7 +712,7 @@ public class HDocumentMutation implements DocumentMutation {
      * @param map  The new value to set at the FieldPath
      * @return {@code this} for chained invocation
      */
-    public HDocumentMutation set(String path, Map<String, ? extends Object> map) {
+    public HDocumentMutation set(String path, Map<String, ?> map) {
         return set(FieldPath.parseFrom(path), map);
     }
 
@@ -723,7 +723,7 @@ public class HDocumentMutation implements DocumentMutation {
      * @param map  The new value to set at the FieldPath
      * @return {@code this} for chained invocation
      */
-    public HDocumentMutation set(FieldPath path, Map<String, ? extends Object> map) {
+    public HDocumentMutation set(FieldPath path, Map<String, ?> map) {
         MutationOp op = new MutationOp();
         op.setType(MutationOp.Type.SET);
         op.setFieldPath(path);
@@ -1243,7 +1243,7 @@ public class HDocumentMutation implements DocumentMutation {
      * @param list The new value to set at the FieldPath
      * @return {@code this} for chained invocation
      */
-    public HDocumentMutation setOrReplace(String path, List<? extends Object> list) {
+    public HDocumentMutation setOrReplace(String path, List<?> list) {
         return setOrReplace(FieldPath.parseFrom(path), list);
     }
 
@@ -1255,7 +1255,7 @@ public class HDocumentMutation implements DocumentMutation {
      * @param list The new value to set at the FieldPath
      * @return {@code this} for chained invocation
      */
-    public HDocumentMutation setOrReplace(FieldPath path, List<? extends Object> list) {
+    public HDocumentMutation setOrReplace(FieldPath path, List<?> list) {
         MutationOp op = new MutationOp();
         op.setType(MutationOp.Type.SET_OR_REPLACE);
         op.setFieldPath(path);
@@ -1273,7 +1273,7 @@ public class HDocumentMutation implements DocumentMutation {
      * @param map  The new value to set at the FieldPath
      * @return {@code this} for chained invocation
      */
-    public HDocumentMutation setOrReplace(String path, Map<String, ? extends Object> map) {
+    public HDocumentMutation setOrReplace(String path, Map<String, ?> map) {
         return setOrReplace(FieldPath.parseFrom(path), map);
     }
 
@@ -1285,7 +1285,7 @@ public class HDocumentMutation implements DocumentMutation {
      * @param map  The new value to set at the FieldPath
      * @return {@code this} for chained invocation
      */
-    public HDocumentMutation setOrReplace(FieldPath path, Map<String, ? extends Object> map) {
+    public HDocumentMutation setOrReplace(FieldPath path, Map<String, ?> map) {
         MutationOp op = new MutationOp();
         op.setType(MutationOp.Type.SET_OR_REPLACE);
         op.setFieldPath(path);
@@ -1336,7 +1336,7 @@ public class HDocumentMutation implements DocumentMutation {
      * @param list The List to append at the FieldPath
      * @return {@code this} for chained invocation
      */
-    public HDocumentMutation append(String path, List<? extends Object> list) {
+    public HDocumentMutation append(String path, List<?> list) {
         return append(FieldPath.parseFrom(path), list);
     }
 
@@ -1351,7 +1351,7 @@ public class HDocumentMutation implements DocumentMutation {
      * @param list The List to append at the FieldPath
      * @return {@code this} for chained invocation
      */
-    public HDocumentMutation append(FieldPath path, List<? extends Object> list) {
+    public HDocumentMutation append(FieldPath path, List<?> list) {
         MutationOp op = new MutationOp();
         op.setType(MutationOp.Type.APPEND);
         op.setFieldPath(path);
@@ -2070,16 +2070,16 @@ public class HDocumentMutation implements DocumentMutation {
                     newValue = new HValue((short) (oldNum.shortValue() + incrNum.shortValue()));
                     break;
                 case INT:
-                    newValue = new HValue((int) (oldNum.intValue() + incrNum.intValue()));
+                    newValue = new HValue(oldNum.intValue() + incrNum.intValue());
                     break;
                 case LONG:
-                    newValue = new HValue((long) (oldNum.longValue() + incrNum.longValue()));
+                    newValue = new HValue(oldNum.longValue() + incrNum.longValue());
                     break;
                 case FLOAT:
-                    newValue = new HValue((float) (oldNum.floatValue() + incrNum.floatValue()));
+                    newValue = new HValue(oldNum.floatValue() + incrNum.floatValue());
                     break;
                 case DOUBLE:
-                    newValue = new HValue((double) (oldNum.doubleValue() + incrNum.doubleValue()));
+                    newValue = new HValue(oldNum.doubleValue() + incrNum.doubleValue());
                     break;
                 case DECIMAL:
                     newValue = new HValue(new BigDecimal(oldNum.toString()).add(new BigDecimal(incrNum.toString())));
