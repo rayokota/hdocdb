@@ -160,7 +160,7 @@ public class HDocumentCollection implements DocumentStore {
      *
      * @param _id value to be used as the _id for this document
      * @return The Document with the given id
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public Document findById(Value _id) throws StoreException {
         return findById(_id, (String[]) null);
@@ -178,7 +178,7 @@ public class HDocumentCollection implements DocumentStore {
      * @param _id value to be used as the _id for this document
      * @param paths list of fields that should be returned in the read document
      * @return The Document with the given id that can be used to requested paths.
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public Document findById(Value _id, String... paths) throws StoreException {
         return findById(_id, true, paths);
@@ -236,7 +236,7 @@ public class HDocumentCollection implements DocumentStore {
      *
      * @return a QueryResult that can be used to retrieve the documents in the result
      *
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public QueryResult find(Query query) throws StoreException {
         // TODO query
@@ -249,7 +249,7 @@ public class HDocumentCollection implements DocumentStore {
      * @return A DocumentStream that can be used to retrieve all documents in the
      * this DocumentStore. The DocumentStream must be closed after
      * retrieving the documents.
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public DocumentStream find() throws StoreException {
         return find(null, (String[]) null);
@@ -261,7 +261,7 @@ public class HDocumentCollection implements DocumentStore {
      *
      * @return a DocumentStream that can be used to retrieve the documents in the result
      *
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public DocumentStream findQuery(Query query) throws StoreException {
         // TODO query
@@ -275,7 +275,7 @@ public class HDocumentCollection implements DocumentStore {
      * @param queryJSON a Json string representation of OJAI Query
      * @return a DocumentStream that can be used to retrieve the documents in the result
      *
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public DocumentStream findQuery(String queryJSON) throws StoreException {
         // TODO query
@@ -290,7 +290,7 @@ public class HDocumentCollection implements DocumentStore {
      * @param paths list of fields that should be returned in the read document
      * @return A DocumentStream that can be used to requested paths. The
      * DocumentStream must be closed after retrieving the documents
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public DocumentStream find(String... paths) throws StoreException {
         return find(null, paths);
@@ -323,7 +323,7 @@ public class HDocumentCollection implements DocumentStore {
      * @param paths list of fields that should be returned in the read document
      * @return A DocumentStream that can be used to read documents with requested
      * paths. The DocumentStream must be closed after retrieving the documents
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public DocumentStream find(QueryCondition c, String... paths)
             throws StoreException {
@@ -404,7 +404,7 @@ public class HDocumentCollection implements DocumentStore {
      * document will be replaced by the specified document.
      *
      * @param doc The Document to be inserted or replaced in the DocumentStore.
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public void insertOrReplace(Document doc) throws StoreException {
         if (doc == null) throw new IllegalArgumentException("doc is null");
@@ -424,7 +424,7 @@ public class HDocumentCollection implements DocumentStore {
      *
      * @param doc The Document to be inserted or replaced in the DocumentStore.
      * @param _id value to be used as the _id for this document
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public void insertOrReplace(Value _id, Document doc) throws StoreException {
         MutationPlan plan = new ReplaceCompiler(table, indexTable, family, getIndexes(), _id, doc, null).compile();
@@ -448,7 +448,7 @@ public class HDocumentCollection implements DocumentStore {
      * @param fieldAsKey document's field to be used as the key when an id is not
      *                   passed in and the document doesn't have an "_id" field or
      *                   a different field is desired to be used as _id.
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public void insertOrReplace(Document doc, FieldPath fieldAsKey) throws StoreException {
         insertOrReplace(doc, fieldAsKey.asPathString());
@@ -465,7 +465,7 @@ public class HDocumentCollection implements DocumentStore {
      * @param fieldAsKey document's field to be used as the key when an id is not
      *                   passed in and the document doesn't have an "_id" field or
      *                   a different field is desired to be used as _id.
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public void insertOrReplace(Document doc, String fieldAsKey) throws StoreException {
         if (doc == null) throw new IllegalArgumentException("doc is null");
@@ -538,7 +538,7 @@ public class HDocumentCollection implements DocumentStore {
      *
      * @param _id document id
      * @param m   a mutation object specifying the mutation operations on the document
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public void update(Value _id, DocumentMutation m) throws StoreException {
         Document doc = ((HDocumentMutation)m).isReadModifyWrite() ? findById(_id, false) : null;
@@ -577,7 +577,7 @@ public class HDocumentCollection implements DocumentStore {
      * the "_id" to delete the document.
      *
      * @param _id        document id
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public void delete(Value _id) throws StoreException {
         MutationPlan plan = new DeleteCompiler(table, family, _id, null).compile();
@@ -866,7 +866,7 @@ public class HDocumentCollection implements DocumentStore {
      * @param _id   document id
      * @param field the field name in dot separated notation
      * @param inc   increment to apply to a field. Can be positive or negative
-     * @throws StoreException
+     * @throws StoreException the store exception
      */
     public void increment(Value _id, String field, byte inc) throws StoreException {
         Document doc = findById(_id, false, field);

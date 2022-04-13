@@ -99,7 +99,7 @@ public class InclusiveStopPrefixFilter extends FilterBase implements Externaliza
     /**
      * @param pbBytes A pb serialized {@link InclusiveStopPrefixFilter} instance
      * @return An instance of {@link InclusiveStopPrefixFilter} made from <code>bytes</code>
-     * @throws DeserializationException
+     * @throws DeserializationException the deserialization exception
      * @see #toByteArray
      */
     public static InclusiveStopPrefixFilter parseFrom(final byte[] pbBytes) throws DeserializationException {

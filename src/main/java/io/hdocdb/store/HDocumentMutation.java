@@ -1750,6 +1750,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this increment operation
      * @param inc  increment to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation increment(String path, Number inc) {
         return increment(FieldPath.parseFrom(path), inc);
@@ -1760,6 +1761,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this increment operation
      * @param inc  increment to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation increment(FieldPath path, Number inc) {
         MutationOp op = new MutationOp();
@@ -1776,6 +1778,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(FieldPath path, byte dec) {
         return increment(path, -dec);
@@ -1786,6 +1789,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(String path, byte dec) {
         return increment(path, -dec);
@@ -1796,6 +1800,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(FieldPath path, short dec) {
         return increment(path, -dec);
@@ -1806,6 +1811,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(String path, short dec) {
         return increment(path, -dec);
@@ -1816,6 +1822,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(String path, int dec) {
         return increment(path, -dec);
@@ -1826,6 +1833,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(FieldPath path, int dec) {
         return increment(path, -dec);
@@ -1836,6 +1844,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(FieldPath path, long dec) {
         return increment(path, -dec);
@@ -1846,6 +1855,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(String path, long dec) {
         return increment(path, -dec);
@@ -1856,6 +1866,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(String path, float dec) {
         return increment(path, -dec);
@@ -1866,6 +1877,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(FieldPath path, float dec) {
         return increment(path, -dec);
@@ -1880,6 +1892,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(FieldPath path, double dec) {
         return increment(path, -dec);
@@ -1890,6 +1903,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(String path, BigDecimal dec) {
         return increment(path, dec.negate());
@@ -1900,6 +1914,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(FieldPath path, BigDecimal dec) {
         return increment(path, dec.negate());
@@ -1910,6 +1925,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(String path, Number dec) {
         return increment(path, negate(dec));
@@ -1920,6 +1936,7 @@ public class HDocumentMutation implements DocumentMutation {
      *
      * @param path the FieldPath to apply this decrement operation
      * @param dec  decrement to apply to a field - can be positive or negative
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation decrement(FieldPath path, Number dec) {
         return increment(path, negate(dec));
@@ -1951,6 +1968,7 @@ public class HDocumentMutation implements DocumentMutation {
      * field {@code "a.b"} is an array, then {@code "a.b.c"} will not be deleted.
      *
      * @param path the FieldPath to delete
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation delete(String path) {
         return delete(FieldPath.parseFrom(path));
@@ -1964,6 +1982,7 @@ public class HDocumentMutation implements DocumentMutation {
      * field {@code "a.b"} is an array, then {@code "a.b.c"} will not be deleted.
      *
      * @param path the FieldPath to delete
+     * @return {@code this} for chained invocation
      */
     public HDocumentMutation delete(FieldPath path) {
         MutationOp op = new MutationOp();
