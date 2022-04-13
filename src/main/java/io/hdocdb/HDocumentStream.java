@@ -136,6 +136,8 @@ public class HDocumentStream extends AbstractList<Document> implements DocumentS
 
     /**
      * Returns a query plan that was used for this DocumentStream
+     *
+     * @return the document
      */
     public Document getQueryPlan() {
         return new HDocument();

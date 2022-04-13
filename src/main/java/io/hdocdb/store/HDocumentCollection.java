@@ -118,9 +118,9 @@ public class HDocumentCollection implements DocumentStore {
     /**
      * Flushes any buffered writes operations for this {@link DocumentStore} and returns a
      * writesContext which can be used to ensure that such writes are visible to ensuing queries.
-     * <p/>
+     *
      * The write-context is cleared and tracking is stopped.
-     * <p/>
+     *
      * This call does not isolate the writes originating from this instance of DocumentStore
      * from other instances and as a side-effect other writes issued to the same document-store
      * through other DocumentStore instances could get flushed.
@@ -144,7 +144,7 @@ public class HDocumentCollection implements DocumentStore {
 
     /**
      * Stops the writes tracking and clears any state on this {@link DocumentStore} instance.
-     * <p/>
+     *
      * This API should be called to stop tracking the writes-context in case where
      * {@link #beginTrackingWrites()} was previously called but a commit context is not needed
      * anymore, for example in case of an error in any of the mutation.

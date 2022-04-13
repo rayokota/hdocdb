@@ -429,8 +429,7 @@ public class HDocumentBuilder implements DocumentBuilder {
     /**
      * Adds an {@code int} unscaled value and an {@code int} scale as a
      * {@code DECIMAL} value at the current index in the current array
-     * and advances the current index by 1. The {@code DECIMAL} value is
-     * <tt>(unscaledValue &times; 10<sup>-scale</sup>)</tt>.
+     * and advances the current index by 1.
      *
      * @param unscaledValue unscaled value of the {@code DECIMAL}
      * @param scale         scale of the {@code DECIMAL}
@@ -445,8 +444,7 @@ public class HDocumentBuilder implements DocumentBuilder {
     /**
      * Adds an {@code long} unscaled value and an {@code int} scale as a
      * {@code DECIMAL} value at the current index in the current array
-     * and advances the current index by 1. The {@code DECIMAL} value is
-     * <tt>(unscaledValue &times; 10<sup>-scale</sup>)</tt>.
+     * and advances the current index by 1.
      *
      * @param unscaledValue unscaled value of the {@code DECIMAL}
      * @param scale         scale of the {@code DECIMAL}
